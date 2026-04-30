@@ -1,0 +1,107 @@
+databaseChangeLog:
+
+  # =========================
+  # categories (ABLLS groups)
+  # =========================
+  - changeSet:
+      id: seed-categories
+      author: dev
+      changes:
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: code, value: "A" }
+              - column: { name: name, value: "Basic Skills" }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: code, value: "B" }
+              - column: { name: name, value: "Language Skills" }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: code, value: "C" }
+              - column: { name: name, value: "Academic Skills" }
+
+  # =========================
+  # skills A (basic)
+  # =========================
+  - changeSet:
+      id: seed-skills-a
+      author: dev
+      changes:
+
+        - insert:
+            tableName: skills
+            columns:
+              - column: { name: code, value: "A1" }
+              - column: { name: name, value: "Requests" }
+              - column: { name: max_score, valueNumeric: 4 }
+              - column: { name: category_id, valueNumeric: 1 }
+
+        - insert:
+            tableName: skills
+            columns:
+              - column: { name: code, value: "A2" }
+              - column: { name: name, value: "Motor imitation" }
+              - column: { name: max_score, valueNumeric: 4 }
+              - column: { name: category_id, valueNumeric: 1 }
+
+        - insert:
+            tableName: skills
+            columns:
+              - column: { name: code, value: "A3" }
+              - column: { name: name, value: "Receptive instructions" }
+              - column: { name: max_score, valueNumeric: 4 }
+              - column: { name: category_id, valueNumeric: 1 }
+
+  # =========================
+  # skills B (language)
+  # =========================
+  - changeSet:
+      id: seed-skills-b
+      author: dev
+      changes:
+
+        - insert:
+            tableName: skills
+            columns:
+              - column: { name: code, value: "B1" }
+              - column: { name: name, value: "Expressive language" }
+              - column: { name: max_score, valueNumeric: 4 }
+              - column: { name: category_id, valueNumeric: 2 }
+
+        - insert:
+            tableName: skills
+            columns:
+              - column: { name: code, value: "B2" }
+              - column: { name: name, value: "Conversational skills" }
+              - column: { name: max_score, valueNumeric: 4 }
+              - column: { name: category_id, valueNumeric: 2 }
+
+  # =========================
+  # skills C (academic)
+  # =========================
+  - changeSet:
+      id: seed-skills-c
+      author: dev
+      changes:
+
+        - insert:
+            tableName: skills
+            columns:
+              - column: { name: code, value: "C1" }
+              - column: { name: name, value: "Matching skills" }
+              - column: { name: max_score, valueNumeric: 4 }
+              - column: { name: category_id, valueNumeric: 3 }
+
+        - insert:
+            tableName: skills
+            columns:
+              - column: { name: code, value: "C2" }
+              - column: { name: name, value: "Sorting and classification" }
+              - column: { name: max_score, valueNumeric: 4 }
+              - column: { name: category_id, valueNumeric: 3 }
