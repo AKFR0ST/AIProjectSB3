@@ -1,5 +1,6 @@
 package com.sb2.entity;
 
+import com.sb2.constant.GridStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +23,9 @@ public class Grid {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long childId;
+    private GridStatus gridStatus;
+
+    private Long studentId;
 
     private Long tutorId;
 

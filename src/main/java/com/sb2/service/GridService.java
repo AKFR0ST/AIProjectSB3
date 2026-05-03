@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,10 +20,18 @@ public class GridService {
     private final GridRepository gridRepository;
     private final SkillRepository skillRepository;
 
+    Optional<Grid> findByIdAndStatus(Long id, String status) {
+        return null;
+    }
+
+    public Grid getGridById(Long gridId) {
+        return gridRepository.findByGridId(gridId);
+    }
+
     public Grid createGrid(GridRequest request) {
 
         Grid grid = new Grid();
-        grid.setChildId(request.getChildId());
+        grid.setStudentId(request.getStudentId());
         grid.setTutorId(request.getTutorId());
         grid.setCreatedAt(LocalDateTime.now());
 

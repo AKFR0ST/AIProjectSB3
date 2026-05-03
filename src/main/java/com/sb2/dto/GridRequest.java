@@ -9,7 +9,7 @@ import java.util.Map;
 @Setter
 public class GridRequest {
 
-    private Long childId;
+    private Long studentId;
 
     private Long tutorId;
 
