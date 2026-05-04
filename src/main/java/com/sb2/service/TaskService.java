@@ -22,18 +22,21 @@ import static com.sb2.constant.LoggerMessages.*;
 public class TaskService {
 
     private final TaskRepository repository;
+    private final GridService gridService;
 
-    public Task createTask(String fileName) {
-        log.info(CREATING_TASK_FOR_FILE, fileName);
-        if (Objects.isNull(fileName) || fileName.isEmpty()) {
-            throw new IllegalArgumentException(ErrorMessages.FILE_NAME_MUST_NOT_BE_EMPTY);
+    public Task createTask(Long gridId) {
+        log.info(CREATING_TASK_FOR_GRID, gridId);
+        if (Objects.isNull(gridId)) {
+            throw new IllegalArgumentException(ErrorMessages.GRID_ID_MUST_NOT_BE_EMPTY);
         }
 
         LocalDateTime now = LocalDateTime.now();
 
+        gridService.markDone(gridId);
+
         return repository.save(
                 Task.builder()
-                        .inputText(fileName)
+                        .gridId(gridId)
                         .status(TaskStatus.CREATED)
                         .createdAt(now)
                         .updatedAt(now)
@@ -52,7 +55,7 @@ public class TaskService {
 
             // TODO тут стоит расположить интеграцию с сервисом парсинга
             Thread.sleep(3000);
-            String result = "Processed: " + task.getInputText();
+            String result = "Processed: " + task.getGridId();
 
             task.setResult(result);
             task.setStatus(TaskStatus.DONE);

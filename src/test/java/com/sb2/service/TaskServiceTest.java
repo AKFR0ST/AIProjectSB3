@@ -30,16 +30,16 @@ class TaskServiceTest {
     void create_task_success() {
         Task task = new Task();
         task.setId(UUID.randomUUID());
-        task.setInputText("test.pdf");
+        task.setGridId(1L);
         task.setStatus(TaskStatus.CREATED);
 
         when(repository.save(any(Task.class)))
                 .thenReturn(task);
 
-        Task result = service.createTask("test.pdf");
+        Task result = service.createTask(1L);
 
         assertNotNull(result);
-        assertEquals("test.pdf", result.getInputText());
+        assertEquals(1L, result.getGridId());
         assertEquals(TaskStatus.CREATED, result.getStatus());
 
         verify(repository, times(1)).save(any(Task.class));
@@ -49,10 +49,10 @@ class TaskServiceTest {
     void should_fail_when_fileName_is_empty() {
         IllegalArgumentException ex = assertThrows(
                 IllegalArgumentException.class,
-                () -> service.createTask("")
+                () -> service.createTask(null)
         );
 
-        assertEquals("fileName must not be empty", ex.getMessage());
+        assertEquals("gridId must not be empty", ex.getMessage());
     }
 
     @Test
@@ -62,7 +62,7 @@ class TaskServiceTest {
                 () -> service.createTask(null)
         );
 
-        assertEquals("fileName must not be empty", ex.getMessage());
+        assertEquals("gridId must not be empty", ex.getMessage());
     }
 
     @Test
@@ -97,7 +97,7 @@ class TaskServiceTest {
 
         Task task = new Task();
         task.setId(id);
-        task.setInputText("laptop.pdf");
+        task.setGridId(1L);
         task.setStatus(TaskStatus.CREATED);
 
         when(repository.findById(id))

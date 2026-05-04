@@ -21,7 +21,7 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private String inputText;
+    private Long gridId;
 
     @Enumerated(EnumType.STRING)
     private TaskStatus status;

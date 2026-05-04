@@ -22,10 +22,25 @@ public class Skill {
     private String code; // A1, A2
 
     @Column(nullable = false)
-    private String name;
+    private Integer maxScore;
 
     @Column(nullable = false)
-    private Integer maxScore;
+    private String task;
+
+    @Column(length = 2000)
+    private String taskDesc;
+
+    @Column(length = 2000)
+    private String question;
+
+    @Column(length = 2000)
+    private String example;
+
+    @Column(length = 2000)
+    private String criteria;
+
+    @Column(length = 2000)
+    private String comment;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")

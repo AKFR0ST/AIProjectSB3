@@ -32,7 +32,7 @@ public class ReferenceController {
 
     @GetMapping("/grids/actual/{studentId}")
     public GridResponse getActualGridByStudentId(@PathVariable Long studentId) {
-        Optional<Grid> editableGridOpt = gridRepository.findByStudentIdAndGridStatus(studentId, GridStatus.EDITABLE);
+        Optional<Grid> editableGridOpt = gridRepository.findByStudentIdAndGridStatus(studentId, GridStatus.DRAFT);
 
         if (editableGridOpt.isPresent()) {
             Grid grid = editableGridOpt.get();
@@ -40,20 +40,20 @@ public class ReferenceController {
         } else {
             GridResponse response = new GridResponse();
             response.setStudentId(studentId);
-            response.setGridStatus(GridStatus.FINISHED);
+            response.setGridStatus(GridStatus.DONE);
             response.setScores(Collections.emptyMap());
             return response;
         }
     }
 
-    private GridResponse mapToGridResponse(Grid grid) {
+    private GridResponse mapToGridResponse(Grid grid) {  //  TODO напрашивается mapstruct
         GridResponse response = new GridResponse();
         response.setStudentId(grid.getStudentId());
         response.setTutorId(grid.getTutorId());
         response.setGridStatus(grid.getGridStatus());
         Map<String, Integer> scoresMap = grid.getScores().stream()
                 .collect(Collectors.toMap(
-                        skillScore -> skillScore.getSkill().getName(), // или другой ключ
+                        skillScore -> skillScore.getSkill().getTask(),
                         SkillScore::getScore
                 ));
         response.setScores(scoresMap);
@@ -71,7 +71,7 @@ public class ReferenceController {
     }
 
     @PostMapping("/grids")
-    public Grid createGrid(@RequestBody GridRequest request) {
-        return gridService.createGrid(request);
+    public void patchGrid(@RequestBody GridRequest request) {
+        gridService.patchGrid(request);
     }
 }

@@ -36,9 +36,9 @@ public class TaskController {
             @ApiResponse(responseCode = "401", description = "Не авторизован")
     })
     @PostMapping
-    public ResponseEntity<CreateTaskResponse> createTask(@RequestParam String fileName) {
-        log.info("Received request to create task: fileName={}", fileName);
-        Task task = service.createTask(fileName);
+    public ResponseEntity<CreateTaskResponse> createTask(@RequestParam Long gridId) {
+        log.info("Received request to create task: gridId={}", gridId);
+        Task task = service.createTask(gridId);
         service.processTask(task.getId());
 
         CreateTaskResponse response =
