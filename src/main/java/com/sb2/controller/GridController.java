@@ -3,34 +3,27 @@ package com.sb2.controller;
 import com.sb2.constant.GridStatus;
 import com.sb2.dto.GridRequest;
 import com.sb2.dto.GridResponse;
-import com.sb2.entity.Category;
 import com.sb2.entity.Grid;
-import com.sb2.entity.Skill;
 import com.sb2.entity.SkillScore;
-import com.sb2.repository.CategoryRepository;
 import com.sb2.repository.GridRepository;
-import com.sb2.repository.SkillRepository;
 import com.sb2.service.GridService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/grid")
 @RequiredArgsConstructor
-public class ReferenceController {
+public class GridController {
 
-    private final SkillRepository skillRepository;
-    private final CategoryRepository categoryRepository;
     private final GridService gridService;
     private final GridRepository gridRepository;
 
-    @GetMapping("/grids/actual/{studentId}")
+    @GetMapping("/actual/{studentId}")
     public GridResponse getActualGridByStudentId(@PathVariable Long studentId) {
         Optional<Grid> editableGridOpt = gridRepository.findByStudentIdAndGridStatus(studentId, GridStatus.DRAFT);
 
@@ -58,16 +51,6 @@ public class ReferenceController {
                 ));
         response.setScores(scoresMap);
         return response;
-    }
-
-    @GetMapping("/skills")
-    public List<Skill> getSkills() {
-        return skillRepository.findAll();
-    }
-
-    @GetMapping("/categories")
-    public List<Category> getCategories() {
-        return categoryRepository.findAll();
     }
 
     @PostMapping("/grids")
