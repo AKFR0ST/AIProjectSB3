@@ -1,8 +1,8 @@
 package com.sb2.service;
 
-import com.sb2.dto.SkillImportDto;
-import com.sb2.entity.Category;
-import com.sb2.entity.Skill;
+import com.sb2.dto.skill.SkillImportDto;
+import com.sb2.entity.category.Category;
+import com.sb2.entity.skill.Skill;
 import com.sb2.repository.CategoryRepository;
 import com.sb2.repository.SkillRepository;
 import lombok.RequiredArgsConstructor;

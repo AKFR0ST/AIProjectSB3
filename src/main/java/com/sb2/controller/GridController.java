@@ -1,12 +1,14 @@
 package com.sb2.controller;
 
 import com.sb2.constant.GridStatus;
-import com.sb2.dto.GridRequest;
-import com.sb2.dto.GridResponse;
-import com.sb2.entity.Grid;
-import com.sb2.entity.SkillScore;
+import com.sb2.dto.grid.GridRequest;
+import com.sb2.dto.grid.GridResponse;
+import com.sb2.entity.grid.Grid;
+import com.sb2.entity.skill.SkillScore;
 import com.sb2.repository.GridRepository;
 import com.sb2.service.GridService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,12 +19,14 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/grid")
+@Tag(name = "Grid", description = "API для создания анкет учеников")
 @RequiredArgsConstructor
 public class GridController {
 
     private final GridService gridService;
     private final GridRepository gridRepository;
 
+    @Operation(summary = "Получить актуальную анкету по id ученика")
     @GetMapping("/actual/{studentId}")
     public GridResponse getActualGridByStudentId(@PathVariable Long studentId) {
         Optional<Grid> editableGridOpt = gridRepository.findByStudentIdAndGridStatus(studentId, GridStatus.DRAFT);
@@ -53,7 +57,8 @@ public class GridController {
         return response;
     }
 
-    @PostMapping("/grids")
+    @Operation(summary = "Передать данные по анкете. Если актуальной анкеты нет, то создать новую.")
+    @PostMapping("/edit")
     public void patchGrid(@RequestBody GridRequest request) {
         gridService.patchGrid(request);
     }

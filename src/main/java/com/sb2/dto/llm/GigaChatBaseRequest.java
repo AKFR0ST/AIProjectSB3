@@ -1,4 +1,4 @@
-package com.sb2.entity;
+package com.sb2.dto.llm;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

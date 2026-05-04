@@ -1,4 +1,4 @@
-package com.sb2.dto;
+package com.sb2.dto.skill;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

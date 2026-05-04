@@ -1,10 +1,10 @@
 package com.sb2.controller;
 
-import com.sb2.dto.CreateTaskResponse;
-import com.sb2.dto.ErrorResponse;
-import com.sb2.dto.TaskResponse;
-import com.sb2.entity.Task;
-import com.sb2.entity.TaskStatus;
+import com.sb2.dto.task.CreateTaskResponse;
+import com.sb2.dto.task.ErrorResponse;
+import com.sb2.dto.task.TaskResponse;
+import com.sb2.entity.task.Task;
+import com.sb2.entity.task.TaskStatus;
 import com.sb2.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -22,13 +22,13 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequestMapping("/tasks")
-@Tag(name = "Tasks", description = "API для работы с задачами обработки текста")
+@Tag(name = "Task", description = "API для создания задач обработки анкет учеников")
 @RequiredArgsConstructor
 public class TaskController {
 
     private final TaskService service;
 
-    @Operation(summary = "Создать задачу на обработку текста")
+    @Operation(summary = "Создать задачу на обработку анкеты")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Задача принята в обработку",
                     content = @Content(schema = @Schema(implementation = CreateTaskResponse.class))),

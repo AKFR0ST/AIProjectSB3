@@ -1,5 +1,6 @@
-package com.sb2.entity;
+package com.sb2.entity.skill;
 
+import com.sb2.entity.grid.Grid;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

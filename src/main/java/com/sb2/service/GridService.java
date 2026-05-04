@@ -1,10 +1,10 @@
 package com.sb2.service;
 
 import com.sb2.constant.GridStatus;
-import com.sb2.dto.GridRequest;
-import com.sb2.entity.Grid;
-import com.sb2.entity.Skill;
-import com.sb2.entity.SkillScore;
+import com.sb2.dto.grid.GridRequest;
+import com.sb2.entity.grid.Grid;
+import com.sb2.entity.skill.Skill;
+import com.sb2.entity.skill.SkillScore;
 import com.sb2.repository.GridRepository;
 import com.sb2.repository.SkillRepository;
 import lombok.RequiredArgsConstructor;

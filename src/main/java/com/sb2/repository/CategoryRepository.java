@@ -1,6 +1,6 @@
 package com.sb2.repository;
 
-import com.sb2.entity.Category;
+import com.sb2.entity.category.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

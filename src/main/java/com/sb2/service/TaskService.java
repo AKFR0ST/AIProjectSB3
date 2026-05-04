@@ -1,8 +1,8 @@
 package com.sb2.service;
 
 import com.sb2.constant.ErrorMessages;
-import com.sb2.entity.Task;
-import com.sb2.entity.TaskStatus;
+import com.sb2.entity.task.Task;
+import com.sb2.entity.task.TaskStatus;
 import com.sb2.exception.TaskNotFoundException;
 import com.sb2.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;

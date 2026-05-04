@@ -1,9 +1,10 @@
 package com.sb2.client;
 
-import com.sb2.entity.GigaChatBaseRequest;
-import com.sb2.entity.GigaChatBaseResponse;
-import com.sb2.entity.GigaChatRequestMessage;
-import com.sb2.entity.GigaChatResponseToken;
+import com.sb2.dto.llm.LlmRequest;
+import com.sb2.dto.llm.GigaChatBaseRequest;
+import com.sb2.dto.llm.GigaChatBaseResponse;
+import com.sb2.dto.llm.GigaChatRequestMessage;
+import com.sb2.dto.llm.GigaChatResponseToken;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.http.HttpStatus;
@@ -13,11 +14,10 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClient;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import static com.sb2.constant.GigaChatConstants.*;
-import static com.sb2.entity.GigaChatModels.GIGACHAT_2_PRO;
+import static com.sb2.entity.llm.GigaChatModels.GIGACHAT_2_PRO;
 
 
 @Component
@@ -83,25 +83,25 @@ public class GigaChatClient {
         }
     }
 
-    public String gigaChatTextToTextRequest(String role, String request){
-        return gigaChatTextToTextRequestWithAttachments(role, request);
+    public String gigaChatTextToTextRequest(LlmRequest llmRequest){
+        return gigaChatTextToTextRequestWithAttachments(llmRequest);
     }
 
-    private String gigaChatTextToTextRequestWithAttachments(String role, String request) {
+    private String gigaChatTextToTextRequestWithAttachments(LlmRequest llmRequest) {
 
         ArrayList<GigaChatRequestMessage> messages = new ArrayList<>();
 
-        if (!role.isEmpty()) {
+        if (!llmRequest.getRole().isEmpty()) {
             GigaChatRequestMessage roleMessage = GigaChatRequestMessage.builder()
                     .role(SYSTEM)
-                    .content(role)
+                    .content(llmRequest.getRole())
                     .build();
             messages.add(roleMessage);
         }
 
         GigaChatRequestMessage textMessage = GigaChatRequestMessage.builder()
                 .role(USER)
-                .content(request)
+                .content(llmRequest.getPrompt())
                 .build();
         messages.add(textMessage);
 

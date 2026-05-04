@@ -1,6 +1,6 @@
 package com.sb2.exception;
 
-import com.sb2.dto.ErrorResponse;
+import com.sb2.dto.task.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

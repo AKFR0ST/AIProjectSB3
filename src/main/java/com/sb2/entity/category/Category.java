@@ -1,5 +1,6 @@
-package com.sb2.entity;
+package com.sb2.entity.category;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,8 +20,10 @@ public class Category {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String code; // A, B, C
+    @Schema(description = "Код", example = "A")
+    private String code;
 
     @Column(nullable = false)
+    @Schema(description = "Наименование", example = "Наименование категории")
     private String name;
 }

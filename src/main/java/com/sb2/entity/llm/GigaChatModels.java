@@ -1,4 +1,4 @@
-package com.sb2.entity;
+package com.sb2.entity.llm;
 
 import lombok.Getter;
 
