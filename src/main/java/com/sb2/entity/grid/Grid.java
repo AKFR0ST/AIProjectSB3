@@ -2,6 +2,7 @@ package com.sb2.entity.grid;
 
 import com.sb2.constant.GridStatus;
 import com.sb2.entity.skill.SkillScore;
+import com.sb2.entity.student.Student;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,7 +27,9 @@ public class Grid {
 
     private GridStatus gridStatus;
 
-    private Long studentId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_id", nullable = false)
+    private Student student;
 
     private Long tutorId;
 

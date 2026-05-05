@@ -2,14 +2,14 @@ package com.sb2.service;
 
 import com.sb2.client.GigaChatClient;
 import com.sb2.dto.llm.LlmRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class GigaChatAPIService {
 
-    @Autowired
-    private GigaChatClient gigaChatClient;
+    private final GigaChatClient gigaChatClient;
 
     public String textToTextRequest(LlmRequest llmRequest) {
         return gigaChatClient.gigaChatTextToTextRequest(llmRequest);

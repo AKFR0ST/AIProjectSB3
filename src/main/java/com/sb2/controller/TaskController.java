@@ -26,7 +26,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class TaskController {
 
-    private final TaskService service;
+    private final TaskService taskService;
 
     @Operation(summary = "Создать задачу на обработку анкеты")
     @ApiResponses(value = {
@@ -38,8 +38,8 @@ public class TaskController {
     @PostMapping
     public ResponseEntity<CreateTaskResponse> createTask(@RequestParam Long gridId) {
         log.info("Received request to create task: gridId={}", gridId);
-        Task task = service.createTask(gridId);
-        service.processTask(task.getId());
+        Task task = taskService.createTask(gridId);
+        taskService.processTask(task.getId());
 
         CreateTaskResponse response =
                 new CreateTaskResponse(task.getId(), TaskStatus.CREATED.name());
@@ -58,7 +58,7 @@ public class TaskController {
     })
     @GetMapping("/{taskId}")
     public Task getTask(@PathVariable UUID taskId) {
-        return service.getTask(taskId);
+        return taskService.getTask(taskId);
     }
 
 }

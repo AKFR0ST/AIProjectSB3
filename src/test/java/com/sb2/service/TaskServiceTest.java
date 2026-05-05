@@ -23,6 +23,9 @@ class TaskServiceTest {
     @Mock
     private TaskRepository repository;
 
+    @Mock
+    private GridService gridService;
+
     @InjectMocks
     private TaskService service;
 

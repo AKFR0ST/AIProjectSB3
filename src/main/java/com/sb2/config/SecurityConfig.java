@@ -31,7 +31,7 @@ public class SecurityConfig {
                                 SWAGGER_UI_HTML
                         ).permitAll()
 
-                        .requestMatchers(HttpMethod.GET, TASKS_BY_ID).hasRole(ROLE_ADMIN)
+//                        .requestMatchers(HttpMethod.GET, TASKS_BY_ID).hasRole(ROLE_ADMIN)
                         .requestMatchers(HttpMethod.POST, TASKS).hasRole(ROLE_USER)
 
                         .anyRequest().authenticated()

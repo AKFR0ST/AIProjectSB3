@@ -5,8 +5,10 @@ import com.sb2.dto.grid.GridRequest;
 import com.sb2.entity.grid.Grid;
 import com.sb2.entity.skill.Skill;
 import com.sb2.entity.skill.SkillScore;
+import com.sb2.entity.student.Student;
 import com.sb2.repository.GridRepository;
 import com.sb2.repository.SkillRepository;
+import com.sb2.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,7 @@ public class GridService {
 
     private final GridRepository gridRepository;
     private final SkillRepository skillRepository;
+    private final StudentRepository studentRepository;
 
     @Transactional
     public void patchGrid(GridRequest request) {
@@ -71,8 +74,12 @@ public class GridService {
     }
 
     private Grid createNewGrid(GridRequest request) {
+
+        Student student = studentRepository.findById(request.getStudentId())
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
         Grid grid = new Grid();
-        grid.setStudentId(request.getStudentId());
+        grid.setStudent(student);
         grid.setTutorId(request.getTutorId());
         grid.setCreatedAt(LocalDateTime.now());
         grid.setGridStatus(GridStatus.DRAFT);
