@@ -3,12 +3,8 @@ package com.sb2.controller;
 import com.sb2.dto.student.StudentRequest;
 import com.sb2.dto.student.StudentResponse;
 import com.sb2.service.StudentService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/students")
@@ -18,11 +14,7 @@ public class StudentController {
     private final StudentService service;
 
     @PostMapping
-    public StudentResponse create(HttpServletRequest raw, @RequestBody StudentRequest request) {
-
-        System.out.println(request);
-        System.out.println(request.getClass());
-
+    public StudentResponse create(@RequestBody StudentRequest request) {
         return service.create(request);
     }
 
@@ -30,9 +22,4 @@ public class StudentController {
     public StudentResponse get(@PathVariable Long id) {
         return service.get(id);
     }
-
-//    @PostMapping
-//    public Map<String, Object> test(@RequestBody Map<String, Object> body) {
-//        return body;
-//    }
 }
