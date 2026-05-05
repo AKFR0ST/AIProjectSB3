@@ -6,7 +6,11 @@ import com.sb2.dto.student.StudentResponse;
 import com.sb2.mapper.StudentMapper;
 import com.sb2.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,10 +26,31 @@ public class StudentService {
         return studentMapper.toDto(student);
     }
 
+    public List<StudentResponse> getAll() {
+        List<Student> students = repository.findAll();
+        return students.stream().map(studentMapper::toDto).toList();
+    }
+
     public StudentResponse get(Long id) {
         return repository.findById(id)
                 .map(studentMapper::toDto)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found"));
     }
 
+    public StudentResponse put(Long id, StudentRequest request) {
+        Student student = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found"));
+
+        studentMapper.updateEntity(student, request);
+
+        student = repository.save(student);
+        return studentMapper.toDto(student);
+    }
+
+    public void delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found");
+        }
+        repository.deleteById(id);
+    }
 }

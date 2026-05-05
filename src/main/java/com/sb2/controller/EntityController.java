@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/entity")
+@RequestMapping("/entities")
 @Tag(name = "Entity", description = "API для управления скилами и категориями")
 @RequiredArgsConstructor
 public class EntityController {
