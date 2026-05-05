@@ -8,6 +8,6 @@ import java.time.LocalDate;
 public class StudentResponse {
     private Long id;
     private String anonymousCode;
-//    private LocalDate birthDate;
+    private LocalDate birthDate;
     private String diagnosisInfo;
 }

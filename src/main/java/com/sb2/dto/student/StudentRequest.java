@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Data
 public class StudentRequest {
     private String anonymousCode;
-//    @JsonFormat(pattern = "yyyy-MM-dd")
-//    private LocalDate birthDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birthDate;
     private String diagnosisInfo;
 }
