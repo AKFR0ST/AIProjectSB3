@@ -5,25 +5,55 @@ services:
     image: postgres:15
     container_name: cp-postgres
     environment:
-      POSTGRES_DB: sb2_db
+      POSTGRES_DB: sb3_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - app-network
 
-  app:
-    build: .
-    container_name: cp-app
+  java-app:
+    command: --gigachat.authorization.key=N2Q3ZGNmMGUtMGU4OC00MTE5LWE3ZGYtMTVjMTNlYmU4MTZmOjcyNWEyZjc1LTE1NDctNGY2My1iNjQ5LTkzZTM2MWNmNDc1ZQ==
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: java-backend
     ports:
       - "8088:8088"
-    depends_on:
-      - postgres
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/sb2_db
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
+      # Переменные для подключения к БД (переопределяют значения из application.properties)
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/sb3_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      java-app:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
   pg_data:
+    name: cp-postgres-data
