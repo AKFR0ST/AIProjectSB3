@@ -1,0 +1,64 @@
+package com.sb3.controller;
+
+import com.sb3.dto.task.CreateTaskResponse;
+import com.sb3.dto.task.ErrorResponse;
+import com.sb3.dto.task.TaskResponse;
+import com.sb3.entity.task.Task;
+import com.sb3.entity.task.TaskStatus;
+import com.sb3.service.TaskService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
+
+@Slf4j
+@RestController
+@RequestMapping("/tasks")
+@Tag(name = "Task", description = "API для создания задач обработки анкет учеников")
+@RequiredArgsConstructor
+public class TaskController {
+
+    private final TaskService taskService;
+
+    @Operation(summary = "Создать задачу на обработку анкеты")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "202", description = "Задача принята в обработку",
+                    content = @Content(schema = @Schema(implementation = CreateTaskResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Некорректный запрос"),
+            @ApiResponse(responseCode = "401", description = "Не авторизован")
+    })
+    @PostMapping
+    public ResponseEntity<CreateTaskResponse> createTask(@RequestParam Long gridId) {
+        log.info("Received request to create task: gridId={}", gridId);
+        Task task = taskService.createTask(gridId);
+        taskService.processTask(task.getId());
+
+        CreateTaskResponse response =
+                new CreateTaskResponse(task.getId(), TaskStatus.CREATED.name());
+
+        return ResponseEntity.accepted().body(response);
+    }
+
+
+    @Operation(summary = "Получить задачу по ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Задача найдена",
+                    content = @Content(schema = @Schema(implementation = TaskResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Задача не найдена",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Не авторизован")
+    })
+    @GetMapping("/{taskId}")
+    public Task getTask(@PathVariable UUID taskId) {
+        return taskService.getTask(taskId);
+    }
+
+}
