@@ -25,12 +25,6 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                SWAGGER_UI,
-                                V_3_API_DOCS,
-                                SWAGGER_UI_HTML
-                        ).permitAll()
-                        .requestMatchers(HttpMethod.POST, TASKS).permitAll()
                         .anyRequest().permitAll()
                 )
                 .httpBasic(Customizer.withDefaults())
