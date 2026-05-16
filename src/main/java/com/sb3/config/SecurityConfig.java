@@ -30,12 +30,8 @@ public class SecurityConfig {
                                 V_3_API_DOCS,
                                 SWAGGER_UI_HTML
                         ).permitAll()
-
-//                        .requestMatchers(HttpMethod.GET, TASKS_BY_ID).hasRole(ROLE_ADMIN)
-//                        .requestMatchers(HttpMethod.POST, TASKS).hasRole(ROLE_USER)
-                                .requestMatchers(HttpMethod.POST, TASKS).permitAll()
-
-//                        .anyRequest().authenticated()
+                        .requestMatchers(HttpMethod.POST, TASKS).permitAll()
+                        .anyRequest().permitAll()
                 )
                 .httpBasic(Customizer.withDefaults())
                 .build();
