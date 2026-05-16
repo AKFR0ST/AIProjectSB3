@@ -32,9 +32,10 @@ public class SecurityConfig {
                         ).permitAll()
 
 //                        .requestMatchers(HttpMethod.GET, TASKS_BY_ID).hasRole(ROLE_ADMIN)
-                        .requestMatchers(HttpMethod.POST, TASKS).hasRole(ROLE_USER)
+//                        .requestMatchers(HttpMethod.POST, TASKS).hasRole(ROLE_USER)
+                                .requestMatchers(HttpMethod.POST, TASKS).permitAll()
 
-                        .anyRequest().authenticated()
+//                        .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())
                 .build();
