@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/llm")
+@RequestMapping("/api/llm")
 @Tag(name = "LLM", description = "API для запросов к GigaChat")
 @RequiredArgsConstructor
 public class LLMController {

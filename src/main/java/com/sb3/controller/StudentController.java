@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/students")
+@RequestMapping("/api/students")
 @Tag(name = "Students", description = "API для редактирования карточек учеников")
 @RequiredArgsConstructor
 public class StudentController {

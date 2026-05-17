@@ -21,7 +21,7 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
-@RequestMapping("/tasks")
+@RequestMapping("/api/tasks")
 @Tag(name = "Task", description = "API для создания задач обработки анкет учеников")
 @RequiredArgsConstructor
 public class TaskController {

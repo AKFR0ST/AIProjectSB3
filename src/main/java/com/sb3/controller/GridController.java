@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/grids")
+@RequestMapping("/api/grids")
 @Tag(name = "Grid", description = "API для создания анкет учеников")
 @RequiredArgsConstructor
 public class GridController {
