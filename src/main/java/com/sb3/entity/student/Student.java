@@ -26,4 +26,6 @@ public class Student {
     @Column(columnDefinition = "text")
     @Schema(description = "Особенности", example = "Моторика")
     private String diagnosisInfo;
+    @Schema(description = "Телефон родителей", example = "+7(999)-999-99-99")
+    private String parentPhone;
 }

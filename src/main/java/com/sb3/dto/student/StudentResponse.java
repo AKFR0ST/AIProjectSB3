@@ -12,4 +12,5 @@ public class StudentResponse {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
     private String diagnosisInfo;
+    private String parentPhone;
 }
