@@ -1,6 +1,7 @@
 package com.sb3.service;
 
 import com.sb3.dto.student.StudentRequest;
+import com.sb3.dto.student.StudentsListResponse;
 import com.sb3.entity.student.Student;
 import com.sb3.dto.student.StudentResponse;
 import com.sb3.mapper.StudentMapper;
@@ -26,9 +27,12 @@ public class StudentService {
         return studentMapper.toDto(student);
     }
 
-    public List<StudentResponse> getAll() {
-        List<Student> students = repository.findAll();
-        return students.stream().map(studentMapper::toDto).toList();
+    public StudentsListResponse getAll() {
+        List<StudentResponse> items = repository.findAll()
+                .stream()
+                .map(studentMapper::toDto)
+                .toList();
+        return new StudentsListResponse(items, (long) items.size());
     }
 
     public StudentResponse get(Long id) {

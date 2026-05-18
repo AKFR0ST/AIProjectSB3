@@ -2,6 +2,7 @@ package com.sb3.controller;
 
 import com.sb3.dto.student.StudentRequest;
 import com.sb3.dto.student.StudentResponse;
+import com.sb3.dto.student.StudentsListResponse;
 import com.sb3.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +28,7 @@ public class StudentController {
 
     @Operation(summary = "Получить все карточки учеников")
     @GetMapping
-    public List<StudentResponse> getAll() {
+    public StudentsListResponse getAll() {
         return service.getAll();
     }
 
