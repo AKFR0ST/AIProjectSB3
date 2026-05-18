@@ -18,4 +18,5 @@ jobs:
             cd ~/app/backend
             git pull origin main
             cd ~/app
+            export CLOUDRU_AUTHORIZATION_KEY="${{ secrets.CLOUDRU_AUTHORIZATION_KEY }}"
             docker compose up -d --build
