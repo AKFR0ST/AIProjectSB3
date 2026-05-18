@@ -1,10 +1,10 @@
 package com.sb3.client;
 
 import com.sb3.dto.llm.LlmRequest;
-import com.sb3.dto.llm.GigaChatBaseRequest;
-import com.sb3.dto.llm.GigaChatBaseResponse;
-import com.sb3.dto.llm.GigaChatRequestMessage;
-import com.sb3.dto.llm.GigaChatResponseToken;
+import com.sb3.dto.llm.GigaChat.GigaChatBaseRequest;
+import com.sb3.dto.llm.GigaChat.GigaChatBaseResponse;
+import com.sb3.dto.llm.GigaChat.GigaChatRequestMessage;
+import com.sb3.dto.llm.GigaChat.GigaChatResponseToken;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.http.HttpStatus;
