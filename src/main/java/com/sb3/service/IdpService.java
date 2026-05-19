@@ -12,6 +12,7 @@ import com.sb3.repository.StudentRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import tools.jackson.databind.ObjectMapper;
 
 
 import java.time.Instant;
@@ -26,16 +27,19 @@ public class IdpService {
     private final IdpExercisesRepository exercisesRepository;
     private final StudentRepository studentRepository;
     private final IdpMapper mapper;
+    private final ObjectMapper objectMapper;
 
     // General Info
     public IdpGeneralInfoResponse createGeneralInfo(IdpGeneralInfoRequest request) {
         Student student = studentRepository.findById(request.getStudentId())
                 .orElseThrow(() -> new NotFoundException("Студент не найден"));
 
-        IdpGeneralInfo entity = mapper.toEntity(request);
+        IdpGeneralInfo entity = new IdpGeneralInfo();
         entity.setStudent(student);
-        entity.setStatus("draft");
         entity.setVersion(1);
+        entity.setStatus("draft");
+        entity.setContent(objectMapper.writeValueAsString(request.getContent()));
+        entity.setCreatedAt(Instant.now());
 
         return mapper.toGeneralInfoResponse(generalInfoRepository.save(entity));
     }
@@ -47,17 +51,19 @@ public class IdpService {
     }
 
     public IdpGeneralInfoResponse getGeneralInfo(Long id) {
-        return mapper.toGeneralInfoResponse(findGeneralInfoById(id));
+        IdpGeneralInfo entity = findGeneralInfoById(id);
+        IdpGeneralInfoResponse response = mapper.toGeneralInfoResponse(entity);
+        response.setContent(parseJson(entity.getContent()));
+        response.setOriginalContent(parseJson(entity.getOriginalContent()));
+        response.setEdits(parseJson(entity.getEdits()));
+        return response;
     }
 
     public IdpGeneralInfoResponse updateGeneralInfo(Long id, IdpGeneralInfoRequest request) {
         IdpGeneralInfo entity = findGeneralInfoById(id);
 
-        // Сохраняем оригинал перед обновлением
         entity.setOriginalContent(entity.getContent());
-        entity.setEdits(request.getContent()); // или merge edits
-
-        entity.setContent(request.getContent());
+        entity.setContent(objectMapper.writeValueAsString(request.getContent()));
         entity.setVersion(entity.getVersion() + 1);
 
         return mapper.toGeneralInfoResponse(generalInfoRepository.save(entity));
@@ -76,11 +82,14 @@ public class IdpService {
 
     // Exercises
     public IdpExercisesResponse createExercise(IdpExercisesRequest request) {
-        IdpGeneralInfo idpGeneralInfo = findGeneralInfoById(request.getIdpGeneralInfoId());
+        IdpGeneralInfo info = findGeneralInfoById(request.getIdpGeneralInfoId());
 
-        IdpExercises entity = mapper.toEntity(request);
-        entity.setIdpGeneralInfo(idpGeneralInfo);
+        IdpExercises entity = new IdpExercises();
+        entity.setIdpGeneralInfo(info);
+        entity.setSkillCodes(request.getSkillCodes());
+        entity.setContent(request.getContent());
         entity.setStatus("draft");
+        entity.setCreatedAt(Instant.now());
 
         return mapper.toExercisesResponse(exercisesRepository.save(entity));
     }
@@ -118,5 +127,14 @@ public class IdpService {
     private IdpExercises findExerciseById(Long id) {
         return exercisesRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Упражнение не найдено"));
+    }
+
+    private Object parseJson(String json) {
+        if (json == null) return null;
+        try {
+            return objectMapper.readValue(json, Object.class);
+        } catch (Exception e) {
+            return json;
+        }
     }
 }

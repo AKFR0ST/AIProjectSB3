@@ -16,9 +16,9 @@ public class IdpGeneralInfoResponse {
     private Long studentId;
     private Integer version;
     private String status;
-    private String content;
-    private String originalContent;
-    private String edits;
+    private Object content;
+    private Object originalContent;
+    private Object edits;
     private Instant createdAt;
     private Instant updatedAt;
     private Instant approvedAt;

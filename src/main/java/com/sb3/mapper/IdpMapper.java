@@ -1,14 +1,11 @@
 package com.sb3.mapper;
 
-import com.sb3.dto.idp.IdpExercisesRequest;
 import com.sb3.dto.idp.IdpExercisesResponse;
-import com.sb3.dto.idp.IdpGeneralInfoRequest;
 import com.sb3.dto.idp.IdpGeneralInfoResponse;
 import com.sb3.entity.idp.IdpExercises;
 import com.sb3.entity.idp.IdpGeneralInfo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
@@ -20,14 +17,8 @@ public interface IdpMapper {
 
     List<IdpGeneralInfoResponse> toGeneralInfoResponseList(List<IdpGeneralInfo> entities);
 
-    IdpGeneralInfo toEntity(IdpGeneralInfoRequest request);
-
-    void updateEntity(@MappingTarget IdpGeneralInfo entity, IdpGeneralInfoRequest request);
-
     @Mapping(source = "idpGeneralInfo.id", target = "idpGeneralInfoId")
     IdpExercisesResponse toExercisesResponse(IdpExercises entity);
 
     List<IdpExercisesResponse> toExercisesResponseList(List<IdpExercises> entities);
-
-    IdpExercises toEntity(IdpExercisesRequest request);
 }

@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class IdpGeneralInfoRequest {
     private Long studentId;
-    private String content;
+    private Object content;
 }
