@@ -70,7 +70,7 @@ public class TaskService {
             task.setStatus(TaskStatus.PROCESSING);
             repository.save(task);
 
-            Grid grid = gridRepository.findById(task.getGridId())
+            Grid grid = gridRepository.findByIdWithScores(task.getGridId())
                     .orElseThrow(() -> new NotFoundException("Grid not found: " + task.getGridId()));
 
             GenerateExercisesRequest request = buildRequest(grid);
