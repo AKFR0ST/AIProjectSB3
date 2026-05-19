@@ -27,7 +27,7 @@ public class GridController {
     private final GridRepository gridRepository;
 
     @Operation(summary = "Получить актуальную анкету по id ученика")
-    @GetMapping("/actual/{studentId}")
+    @GetMapping("/{studentId}")
     public GridResponse getActualGridByStudentId(@PathVariable Long studentId) {
         Optional<Grid> editableGridOpt = gridRepository.findByStudentIdAndGridStatus(studentId, GridStatus.DRAFT);
 
@@ -58,7 +58,7 @@ public class GridController {
     }
 
     @Operation(summary = "Передать данные по анкете. Если актуальной анкеты нет, то создать новую.")
-    @PostMapping("/edit")
+    @PostMapping("/")
     public void patchGrid(@RequestBody GridRequest request) {
         gridService.patchGrid(request);
     }
