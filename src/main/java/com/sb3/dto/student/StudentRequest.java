@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 public class StudentRequest {
     private Long studentId;
+    private String studentCode;
     private PersonalInfo personalInfo;
     private MedicalInfo medicalInfo;
     private String videoLinks;

@@ -9,6 +9,7 @@ import java.util.List;
 public class StudentResponse {
     private Long id;
     private Long studentId;
+    private String studentCode;
     private PersonalInfo personalInfo;
     private MedicalInfo medicalInfo;
     private String videoLinks;

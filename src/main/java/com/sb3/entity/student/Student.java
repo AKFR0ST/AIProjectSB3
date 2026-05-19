@@ -1,5 +1,6 @@
 package com.sb3.entity.student;
 
+import com.sb3.entity.idp.IdpGeneralInfo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -101,4 +102,7 @@ public class Student {
 
     @Column(name = "additional_notes", columnDefinition = "text")
     private String additionalNotes;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<IdpGeneralInfo> idpGeneralInfoList = new ArrayList<>();
 }
