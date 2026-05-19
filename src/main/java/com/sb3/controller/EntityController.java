@@ -2,8 +2,6 @@ package com.sb3.controller;
 
 import com.sb3.dto.Category.CategoryResponse;
 import com.sb3.dto.skill.SkillResponse;
-import com.sb3.entity.category.Category;
-import com.sb3.entity.skill.Skill;
 import com.sb3.mapper.EntityMapper;
 import com.sb3.repository.CategoryRepository;
 import com.sb3.repository.SkillRepository;
