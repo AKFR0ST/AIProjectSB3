@@ -1,16 +1,34 @@
 package com.sb3.dto.student;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sb3.entity.student.*;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class StudentResponse {
     private Long id;
-    private String anonymousCode;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate birthDate;
-    private String diagnosisInfo;
-    private String parentPhone;
+    private Long studentId;
+    private PersonalInfo personalInfo;
+    private MedicalInfo medicalInfo;
+    private String videoLinks;
+    private String mainConcern;
+    private AbaHistory abaHistory;
+    private String strengths;
+    private String challenges;
+    private String achievements3months;
+    private String achievements1year;
+    private String goals3months;
+    private String goals1year;
+    private Communication communication;
+    private SocialAndPlay socialAndPlay;
+    private LearningSkills learningSkills;
+    private Behavior behavior;
+    private List<ProblemBehavior> problemBehaviors;
+    private List<SelfStimulatoryBehavior> selfStimulatoryBehaviors;
+    private Motivation motivation;
+    private DailyRoutine dailyRoutine;
+    private SchoolInfo schoolInfo;
+    private PreliminarySkillAssessment preliminarySkillAssessment;
+    private String additionalNotes;
 }
