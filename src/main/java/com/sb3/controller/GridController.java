@@ -4,7 +4,7 @@ import com.sb3.constant.GridStatus;
 import com.sb3.dto.grid.GridRequest;
 import com.sb3.dto.grid.GridResponse;
 import com.sb3.entity.grid.Grid;
-import com.sb3.entity.skill.SkillScore;
+import com.sb3.entity.grid.SkillScore;
 import com.sb3.repository.GridRepository;
 import com.sb3.service.GridService;
 import io.swagger.v3.oas.annotations.Operation;

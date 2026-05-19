@@ -1,7 +1,6 @@
 package com.sb3.entity.grid;
 
 import com.sb3.constant.GridStatus;
-import com.sb3.entity.skill.SkillScore;
 import com.sb3.entity.student.Student;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
-package com.sb3.entity.skill;
+package com.sb3.entity.grid;
 
-import com.sb3.entity.grid.Grid;
+import com.sb3.entity.skill.Skill;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

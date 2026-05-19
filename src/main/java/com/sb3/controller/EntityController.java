@@ -1,7 +1,10 @@
 package com.sb3.controller;
 
+import com.sb3.dto.Category.CategoryResponse;
+import com.sb3.dto.skill.SkillResponse;
 import com.sb3.entity.category.Category;
 import com.sb3.entity.skill.Skill;
+import com.sb3.mapper.EntityMapper;
 import com.sb3.repository.CategoryRepository;
 import com.sb3.repository.SkillRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,18 +22,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EntityController {
 
-    private final SkillRepository skillRepository;
+    private final EntityMapper entityMapper;
     private final CategoryRepository categoryRepository;
+    private final SkillRepository skillRepository;
 
-    @Operation(summary = "Получить список скиллов")
     @GetMapping("/skills")
-    public List<Skill> getSkills() {
-        return skillRepository.findAll();
+    public List<SkillResponse> getSkills() {
+        return entityMapper.toSkillDtoList(skillRepository.findAll());
     }
 
     @Operation(summary = "Получить список категорий")
     @GetMapping("/categories")
-    public List<Category> getCategories() {
-        return categoryRepository.findAll();
+    public List<CategoryResponse> getCategories() {
+        return entityMapper.toCategoryDtoList(categoryRepository.findAll());
     }
 }
