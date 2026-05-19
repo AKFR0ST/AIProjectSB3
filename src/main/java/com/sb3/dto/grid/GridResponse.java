@@ -9,6 +9,9 @@ import java.util.Map;
 @Data
 public class GridResponse {
 
+    @Schema(description = "Grid ID", example = "7")
+    private Long id;
+
     @Schema(description = "Student ID", example = "123")
     private Long studentId;
 

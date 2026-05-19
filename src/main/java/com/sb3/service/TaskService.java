@@ -5,6 +5,7 @@ import com.sb3.entity.grid.GenerateExercisesRequest;
 import com.sb3.entity.grid.GenerateExercisesResponse;
 import com.sb3.entity.grid.Grid;
 import com.sb3.entity.grid.SkillScore;
+import com.sb3.entity.skill.SkillExercise;
 import com.sb3.entity.task.Task;
 import com.sb3.entity.task.TaskStatus;
 import com.sb3.exception.NotFoundException;
@@ -21,10 +22,7 @@ import org.springframework.web.client.RestClient;
 import tools.jackson.databind.ObjectMapper;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 import static com.sb3.constant.LoggerMessages.*;
 
@@ -37,6 +35,7 @@ public class TaskService {
     private final GridRepository gridRepository;
     private final GridService gridService;
     private final ObjectMapper objectMapper;
+    private final IdpService idpService;
     private final RestClient restClient = RestClient.builder()
             .baseUrl("http://ai-agent:8089")
             .build();
@@ -92,6 +91,12 @@ public class TaskService {
             task.setStatus(TaskStatus.DONE);
 
             log.info(TASK_PROCESSED_SUCCESSFULLY, taskId);
+
+            if (agentResponse.getDraft() != null) {
+
+                    idpService.createExerciseFromAgent(grid.getStudent().getId(), agentResponse.getDraft());
+
+            }
 
         } catch (Exception e) {
             log.error(ERROR_PROCESSING_TASK, taskId, e.getMessage(), e);

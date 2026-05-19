@@ -3,6 +3,7 @@ package com.sb3.service;
 import com.sb3.dto.idp.*;
 import com.sb3.entity.idp.IdpExercises;
 import com.sb3.entity.idp.IdpGeneralInfo;
+import com.sb3.entity.skill.SkillExercise;
 import com.sb3.entity.student.Student;
 import com.sb3.exception.NotFoundException;
 import com.sb3.mapper.IdpMapper;
@@ -12,6 +13,7 @@ import com.sb3.repository.StudentRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import tools.jackson.databind.ObjectMapper;
 
 
@@ -144,6 +146,35 @@ public class IdpService {
             return objectMapper.readValue(json, Object.class);
         } catch (Exception e) {
             return json;
+        }
+    }
+
+    @Transactional
+    public void createExerciseFromAgent(Long studentId, List<SkillExercise> exercises) {
+        IdpGeneralInfo generalInfo = generalInfoRepository
+                .findByStudentIdOrderByVersionDesc(studentId)
+                .stream()
+                .findFirst()
+                .orElse(null);
+
+        if (generalInfo == null) return;
+
+        for (SkillExercise exercise : exercises) {
+            IdpExercises entity = new IdpExercises();
+            entity.setIdpGeneralInfo(generalInfo);
+            entity.setSkillCodes(List.of(exercise.getSkillCode()));
+            entity.setContent(writeJson(exercise));
+            entity.setStatus("draft");
+            entity.setCreatedAt(Instant.now());
+            exercisesRepository.save(entity);
+        }
+    }
+
+    private String writeJson(Object obj) {
+        try {
+            return objectMapper.writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -45,6 +45,7 @@ public class GridController {
 
     private GridResponse mapToGridResponse(Grid grid) {  //  TODO напрашивается mapstruct
         GridResponse response = new GridResponse();
+        response.setId(grid.getId());
         response.setStudentId(grid.getStudent().getId());
         response.setTutorId(grid.getTutorId());
         response.setGridStatus(grid.getGridStatus());
