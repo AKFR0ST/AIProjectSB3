@@ -45,8 +45,17 @@ public class IdpService {
     }
 
     public IdpListResponse getGeneralInfoByStudent(Long studentId) {
-        List<IdpGeneralInfoResponse> items = mapper.toGeneralInfoResponseList(
-                generalInfoRepository.findByStudentIdOrderByVersionDesc(studentId));
+        List<IdpGeneralInfoResponse> items = generalInfoRepository
+                .findByStudentIdOrderByVersionDesc(studentId)
+                .stream()
+                .map(entity -> {
+                    IdpGeneralInfoResponse response = mapper.toGeneralInfoResponse(entity);
+                    response.setContent(parseJson(entity.getContent()));
+                    response.setOriginalContent(parseJson(entity.getOriginalContent()));
+                    response.setEdits(parseJson(entity.getEdits()));
+                    return response;
+                })
+                .toList();
         return new IdpListResponse(items, (long) items.size());
     }
 
