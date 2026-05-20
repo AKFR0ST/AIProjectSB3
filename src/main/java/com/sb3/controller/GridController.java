@@ -51,7 +51,7 @@ public class GridController {
         response.setGridStatus(grid.getGridStatus());
         Map<String, Integer> scoresMap = grid.getScores().stream()
                 .collect(Collectors.toMap(
-                        skillScore -> skillScore.getSkill().getTask(),
+                        skillScore -> skillScore.getSkill().getCode(),
                         SkillScore::getScore
                 ));
         response.setScores(scoresMap);
