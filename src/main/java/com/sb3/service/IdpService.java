@@ -162,7 +162,8 @@ public class IdpService {
         for (SkillExercise exercise : exercises) {
             IdpExercises entity = new IdpExercises();
             entity.setIdpGeneralInfo(generalInfo);
-            entity.setSkillCodes(List.of(exercise.getSkillCode()));
+            String skillCode = exercise.getSkillCode();
+            entity.setSkillCodes(skillCode != null ? List.of(skillCode) : List.of());
             entity.setContent(writeJson(exercise));
             entity.setStatus("draft");
             entity.setCreatedAt(Instant.now());
