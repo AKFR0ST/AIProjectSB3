@@ -14,6 +14,7 @@ import java.time.Instant;
 public class IdpGeneralInfoResponse {
     private Long id;
     private Long studentId;
+    private Long gridId;
     private Integer version;
     private String status;
     private Object content;

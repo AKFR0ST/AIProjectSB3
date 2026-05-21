@@ -12,6 +12,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface IdpMapper {
 
+    @Mapping(source = "grid.id", target = "gridId")
     @Mapping(source = "student.id", target = "studentId")
     IdpGeneralInfoResponse toGeneralInfoResponse(IdpGeneralInfo entity);
 

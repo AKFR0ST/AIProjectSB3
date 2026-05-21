@@ -94,7 +94,7 @@ public class TaskService {
 
             if (agentResponse.getDraft() != null) {
 
-                    idpService.saveExercisesFromAgent(grid.getStudent().getId(), agentResponse.getDraft());
+                    idpService.saveExercisesFromAgent(grid, agentResponse.getDraft());
 
             }
 

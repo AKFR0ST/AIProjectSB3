@@ -1,5 +1,6 @@
 package com.sb3.entity.idp;
 
+import com.sb3.entity.grid.Grid;
 import com.sb3.entity.student.Student;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,10 @@ public class IdpGeneralInfo {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "grid_id", unique = true)
+    private Grid grid;
 
     @Column(nullable = false)
     @Builder.Default

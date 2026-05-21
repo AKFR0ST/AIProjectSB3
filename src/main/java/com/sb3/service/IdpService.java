@@ -1,6 +1,7 @@
 package com.sb3.service;
 
 import com.sb3.dto.idp.*;
+import com.sb3.entity.grid.Grid;
 import com.sb3.entity.idp.IdpExercises;
 import com.sb3.entity.idp.IdpGeneralInfo;
 import com.sb3.entity.skill.SkillExercise;
@@ -152,11 +153,12 @@ public class IdpService {
     }
 
     @Transactional
-    public void saveExercisesFromAgent(Long studentId, List<SkillExercise> exercises) {
-        Student student = studentRepository.findById(studentId)
+    public void saveExercisesFromAgent(Grid grid, List<SkillExercise> exercises) {
+        Student student = studentRepository.findById(grid.getStudent().getId())
                 .orElseThrow(() -> new NotFoundException("Студент не найден"));
 
         IdpGeneralInfo generalInfo = new IdpGeneralInfo();
+        generalInfo.setGrid(grid);
         generalInfo.setStudent(student);
         generalInfo.setStatus("draft");
         generalInfo.setVersion(1);
@@ -165,7 +167,7 @@ public class IdpService {
         String code = student.getStudentCode() != null ? student.getStudentCode() : "";
         contentMap.put("student", Map.of("code", code));
         contentMap.put("skills", exercises);
-        contentMap.put("general_info", getLastGeneralInfo(studentId));
+        contentMap.put("general_info", getLastGeneralInfo(grid.getStudent().getId()));
 
         generalInfo.setContent(writeJson(contentMap));
         generalInfo = generalInfoRepository.save(generalInfo);
