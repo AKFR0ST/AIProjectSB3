@@ -162,7 +162,8 @@ public class IdpService {
         generalInfo.setVersion(1);
 
         Map<String, Object> contentMap = new HashMap<>();
-        contentMap.put("student", Map.of("code", student.getStudentCode()));
+        String code = student.getStudentCode() != null ? student.getStudentCode() : "";
+        contentMap.put("student", Map.of("code", code));
         contentMap.put("skills", exercises);
         contentMap.put("general_info", getLastGeneralInfo(studentId));
 
