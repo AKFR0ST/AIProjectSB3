@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -62,5 +63,18 @@ public class GridController {
     @PostMapping("/")
     public void patchGrid(@RequestBody GridRequest request) {
         gridService.patchGrid(request);
+    }
+
+    @Operation(summary = "Получение грида по его id")
+    @GetMapping("/temp/{id}")
+    public GridResponse getGridById(@PathVariable Long id) {
+        return mapToGridResponse(gridService.getGridById(id));
+    }
+
+    @Operation(summary = "Получение списка гридов по id ученика")
+    @GetMapping("/temp/student/{id}")
+    public List<GridResponse> getGridByStudentId(@PathVariable Long id) {
+        return gridService.getAllGridByStudentId(id).stream().map(this::mapToGridResponse)
+                .toList();
     }
 }

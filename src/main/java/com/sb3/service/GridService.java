@@ -2,6 +2,7 @@ package com.sb3.service;
 
 import com.sb3.constant.GridStatus;
 import com.sb3.dto.grid.GridRequest;
+import com.sb3.dto.grid.GridResponse;
 import com.sb3.entity.grid.Grid;
 import com.sb3.entity.skill.Skill;
 import com.sb3.entity.grid.SkillScore;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -91,5 +93,13 @@ public class GridService {
         Grid grid = gridRepository.findById(gridId).orElseThrow();
         grid.setGridStatus(GridStatus.DONE);
         gridRepository.save(grid);
+    }
+
+    public Grid getGridById(Long id) {
+        return gridRepository.findById(id).orElseThrow(() -> new RuntimeException("Student not found"));
+    }
+
+    public List<Grid> getAllGridByStudentId(Long id) {
+        return gridRepository.findAllByStudentId(id);
     }
 }

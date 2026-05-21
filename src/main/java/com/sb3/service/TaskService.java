@@ -61,7 +61,7 @@ public class TaskService {
     }
 
     @Async
-    public void processTask(UUID taskId) {
+    public void processTask(UUID taskId) {  // TODO на рефакторинг
         log.info(START_PROCESSING_TASK, taskId);
         Task task = repository.findById(taskId).orElseThrow();
 
@@ -94,7 +94,7 @@ public class TaskService {
 
             if (agentResponse.getDraft() != null) {
 
-                    idpService.createExerciseFromAgent(grid.getStudent().getId(), agentResponse.getDraft());
+                    idpService.saveExercisesFromAgent(grid.getStudent().getId(), agentResponse.getDraft());
 
             }
 

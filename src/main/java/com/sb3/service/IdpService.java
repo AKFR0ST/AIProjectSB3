@@ -150,20 +150,23 @@ public class IdpService {
     }
 
     @Transactional
-    public void createExerciseFromAgent(Long studentId, List<SkillExercise> exercises) {
-        IdpGeneralInfo generalInfo = generalInfoRepository
-                .findByStudentIdOrderByVersionDesc(studentId)
-                .stream()
-                .findFirst()
-                .orElse(null);
+    public void saveExercisesFromAgent(Long studentId, List<SkillExercise> exercises) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new NotFoundException("Студент не найден"));
 
-        if (generalInfo == null) return;
+        IdpGeneralInfo generalInfo = new IdpGeneralInfo();
+        generalInfo.setStudent(student);
+        generalInfo.setStatus("draft");
+        generalInfo.setVersion(1);
+        generalInfo.setContent("{}");
+        generalInfo = generalInfoRepository.save(generalInfo);
 
         for (SkillExercise exercise : exercises) {
             IdpExercises entity = new IdpExercises();
             entity.setIdpGeneralInfo(generalInfo);
-            String skillCode = exercise.getSkillCode();
-            entity.setSkillCodes(skillCode != null ? List.of(skillCode) : List.of());
+            entity.setSkillCodes(
+                    exercise.getSkillCode() != null ? List.of(exercise.getSkillCode()) : List.of()
+            );
             entity.setContent(writeJson(exercise));
             entity.setStatus("draft");
             entity.setCreatedAt(Instant.now());
@@ -171,7 +174,7 @@ public class IdpService {
         }
     }
 
-    private String writeJson(Object obj) {
+    private String writeJson(Object obj) {  // TODO на рефакторинг
         try {
             return objectMapper.writeValueAsString(obj);
         } catch (Exception e) {

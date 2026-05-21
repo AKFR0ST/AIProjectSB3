@@ -6,12 +6,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface GridRepository extends JpaRepository<Grid, Long> {
 
     Optional<Grid> findByStudentIdAndGridStatus(Long id, GridStatus gridStatus);
 
-    @Query("SELECT g FROM Grid g JOIN FETCH g.scores s JOIN FETCH s.skill WHERE g.id = :id")
+    List<Grid> findAllByStudentId(Long id);
+
+    @Query("SELECT g FROM Grid g JOIN FETCH g.scores s JOIN FETCH s.skill WHERE g.id = :id")  //  TODO на рефакторинг
     Optional<Grid> findByIdWithScores(@Param("id") Long id);
 }
