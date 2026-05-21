@@ -18,6 +18,7 @@ import tools.jackson.databind.ObjectMapper;
 
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -159,14 +160,13 @@ public class IdpService {
         generalInfo.setStudent(student);
         generalInfo.setStatus("draft");
         generalInfo.setVersion(1);
-        generalInfo.setContent("{}");
 
-        Map<String, Object> summary = Map.of(
-                "skills_count", exercises.size(),
-                "skills", exercises.stream().map(SkillExercise::getName).toList()
-        );
-        generalInfo.setContent(writeJson(summary));
+        Map<String, Object> contentMap = new HashMap<>();
+        contentMap.put("student", Map.of("code", student.getStudentCode()));
+        contentMap.put("skills", exercises);
+        contentMap.put("general_info", getLastGeneralInfo(studentId));
 
+        generalInfo.setContent(writeJson(contentMap));
         generalInfo = generalInfoRepository.save(generalInfo);
 
         for (SkillExercise exercise : exercises) {
@@ -179,6 +179,25 @@ public class IdpService {
             entity.setStatus("draft");
             entity.setCreatedAt(Instant.now());
             exercisesRepository.save(entity);
+        }
+    }
+
+    private Map<String, Object> getLastGeneralInfo(Long studentId) {
+        return generalInfoRepository.findByStudentIdOrderByVersionDesc(studentId)
+                .stream()
+                .findFirst()
+                .map(IdpGeneralInfo::getContent)
+                .map(this::parseGeneralInfo)
+                .orElseGet(HashMap::new);
+    }
+
+    private Map<String, Object> parseGeneralInfo(String content) {
+        try {
+            Map<String, Object> map = objectMapper.readValue(content, Map.class);
+            Object generalInfo = map.get("general_info");
+            return generalInfo instanceof Map ? (Map<String, Object>) generalInfo : new HashMap<>();
+        } catch (Exception e) {
+            return new HashMap<>();
         }
     }
 
