@@ -19,6 +19,7 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -159,6 +160,13 @@ public class IdpService {
         generalInfo.setStatus("draft");
         generalInfo.setVersion(1);
         generalInfo.setContent("{}");
+
+        Map<String, Object> summary = Map.of(
+                "skills_count", exercises.size(),
+                "skills", exercises.stream().map(SkillExercise::getName).toList()
+        );
+        generalInfo.setContent(writeJson(summary));
+
         generalInfo = generalInfoRepository.save(generalInfo);
 
         for (SkillExercise exercise : exercises) {
