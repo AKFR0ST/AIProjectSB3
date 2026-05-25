@@ -2,6 +2,7 @@ package com.sb3.service;
 
 import com.sb3.dto.student.StudentRequest;
 import com.sb3.dto.student.StudentsListResponse;
+import com.sb3.entity.student.PersonalInfo;
 import com.sb3.entity.student.Student;
 import com.sb3.dto.student.StudentResponse;
 import com.sb3.mapper.StudentMapper;
@@ -46,6 +47,16 @@ public class StudentService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found"));
 
         studentMapper.updateEntity(student, request);
+
+        // TODO вернуть mapstruct
+        if (request.getProblemBehaviors() != null) {
+            student.getProblemBehaviors().clear();
+            student.getProblemBehaviors().addAll(request.getProblemBehaviors());
+        }
+        if (request.getSelfStimulatoryBehaviors() != null) {
+            student.getSelfStimulatoryBehaviors().clear();
+            student.getSelfStimulatoryBehaviors().addAll(request.getSelfStimulatoryBehaviors());
+        }
 
         student = repository.save(student);
         return studentMapper.toDto(student);

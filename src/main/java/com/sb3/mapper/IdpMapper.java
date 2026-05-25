@@ -10,8 +10,7 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring",
-        collectionMappingStrategy = CollectionMappingStrategy.ACCESSOR_ONLY)
+@Mapper(componentModel = "spring")
 public interface IdpMapper {
 
     @Mapping(source = "grid.id", target = "gridId")
