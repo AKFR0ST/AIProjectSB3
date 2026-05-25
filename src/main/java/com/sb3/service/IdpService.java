@@ -14,7 +14,6 @@ import com.sb3.repository.StudentRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import tools.jackson.databind.ObjectMapper;
 
 
@@ -157,7 +156,7 @@ public class IdpService {
         Student student = studentRepository.findById(grid.getStudent().getId())
                 .orElseThrow(() -> new NotFoundException("Студент не найден"));
 
-        IdpGeneralInfo generalInfo = new IdpGeneralInfo();
+        IdpGeneralInfo generalInfo = new IdpGeneralInfo(); // TODO На рефакторинг - general info должен браться из анкеты
         generalInfo.setGrid(grid);
         generalInfo.setStudent(student);
         generalInfo.setStatus("draft");

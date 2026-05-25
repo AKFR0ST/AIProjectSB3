@@ -2,7 +2,6 @@ package com.sb3.service;
 
 import com.sb3.constant.GridStatus;
 import com.sb3.dto.grid.GridRequest;
-import com.sb3.dto.grid.GridResponse;
 import com.sb3.entity.grid.Grid;
 import com.sb3.entity.skill.Skill;
 import com.sb3.entity.grid.SkillScore;

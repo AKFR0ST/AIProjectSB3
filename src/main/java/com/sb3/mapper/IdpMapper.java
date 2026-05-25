@@ -4,12 +4,14 @@ import com.sb3.dto.idp.IdpExercisesResponse;
 import com.sb3.dto.idp.IdpGeneralInfoResponse;
 import com.sb3.entity.idp.IdpExercises;
 import com.sb3.entity.idp.IdpGeneralInfo;
+import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",
+        collectionMappingStrategy = CollectionMappingStrategy.ACCESSOR_ONLY)
 public interface IdpMapper {
 
     @Mapping(source = "grid.id", target = "gridId")
