@@ -32,13 +32,17 @@ public class StudentService {
         if (student.getSocialAndPlay() != null) student.getSocialAndPlay().setId(null);
         if (student.getLearningSkills() != null) student.getLearningSkills().setId(null);
         if (student.getBehavior() != null) {
+            System.out.println("Behavior id before: " + student.getBehavior().getId());
+            System.out.println("dangerousBehavior id before: " +
+                    (student.getBehavior().getDangerousBehavior() != null ? student.getBehavior().getDangerousBehavior().getId() : "null"));
+
             student.getBehavior().setId(null);
-            if (student.getBehavior().getRepetitiveBehavior() != null)
-                student.getBehavior().getRepetitiveBehavior().setId(null);
-            if (student.getBehavior().getUnwantedBehavior() != null)
-                student.getBehavior().getUnwantedBehavior().setId(null);
-            if (student.getBehavior().getDangerousBehavior() != null)
+            if (student.getBehavior().getDangerousBehavior() != null) {
                 student.getBehavior().getDangerousBehavior().setId(null);
+            }
+
+            System.out.println("dangerousBehavior id after: " +
+                    (student.getBehavior().getDangerousBehavior() != null ? student.getBehavior().getDangerousBehavior().getId() : "null"));
         }
         if (student.getMotivation() != null) {
             student.getMotivation().setId(null);
