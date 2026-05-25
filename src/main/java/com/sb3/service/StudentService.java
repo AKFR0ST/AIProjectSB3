@@ -22,8 +22,45 @@ public class StudentService {
     private final StudentMapper studentMapper;
 
     public StudentResponse create(StudentRequest request) {
-        System.out.println(request);
         Student student = studentMapper.toEntity(request);
+
+        // TODO тут тоже вернуть отлетевший mapstuct
+        if (student.getPersonalInfo() != null) student.getPersonalInfo().setId(null);
+        if (student.getMedicalInfo() != null) student.getMedicalInfo().setId(null);
+        if (student.getAbaHistory() != null) student.getAbaHistory().setId(null);
+        if (student.getCommunication() != null) student.getCommunication().setId(null);
+        if (student.getSocialAndPlay() != null) student.getSocialAndPlay().setId(null);
+        if (student.getLearningSkills() != null) student.getLearningSkills().setId(null);
+        if (student.getBehavior() != null) {
+            student.getBehavior().setId(null);
+            if (student.getBehavior().getRepetitiveBehavior() != null)
+                student.getBehavior().getRepetitiveBehavior().setId(null);
+            if (student.getBehavior().getUnwantedBehavior() != null)
+                student.getBehavior().getUnwantedBehavior().setId(null);
+            if (student.getBehavior().getDangerousBehavior() != null)
+                student.getBehavior().getDangerousBehavior().setId(null);
+        }
+        if (student.getMotivation() != null) {
+            student.getMotivation().setId(null);
+            if (student.getMotivation().getPreferred() != null)
+                student.getMotivation().getPreferred().setId(null);
+        }
+        if (student.getDailyRoutine() != null) student.getDailyRoutine().setId(null);
+        if (student.getSchoolInfo() != null) student.getSchoolInfo().setId(null);
+        if (student.getPreliminarySkillAssessment() != null) student.getPreliminarySkillAssessment().setId(null);
+        if (student.getSocialAndPlay() != null) {
+            student.getSocialAndPlay().setId(null);
+            if (student.getSocialAndPlay().getPeerInteractions() != null)
+                student.getSocialAndPlay().getPeerInteractions().setId(null);
+            if (student.getSocialAndPlay().getGroupBehavior() != null)
+                student.getSocialAndPlay().getGroupBehavior().setId(null);
+        }
+
+        if (student.getProblemBehaviors() != null)
+            student.getProblemBehaviors().forEach(pb -> pb.setId(null));
+        if (student.getSelfStimulatoryBehaviors() != null)
+            student.getSelfStimulatoryBehaviors().forEach(sb -> sb.setId(null));
+
         student = repository.save(student);
         return studentMapper.toDto(student);
     }
