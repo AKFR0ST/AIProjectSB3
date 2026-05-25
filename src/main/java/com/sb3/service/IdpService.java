@@ -115,9 +115,13 @@ public class IdpService {
     public IdpExercisesResponse updateExercise(Long id, IdpExercisesRequest request) {
         IdpExercises entity = findExerciseById(id);
 
-        entity.setOriginalContent(entity.getContent());
-        entity.setContent(request.getContent());
-        entity.setSkillCodes(request.getSkillCodes());
+        if (request.getContent() != null) {
+            entity.setOriginalContent(entity.getContent());
+            entity.setContent(request.getContent());
+        }
+        if (request.getSkillCodes() != null && !request.getSkillCodes().isEmpty()) {
+            entity.setSkillCodes(request.getSkillCodes());
+        }
 
         return mapper.toExercisesResponse(exercisesRepository.save(entity));
     }
