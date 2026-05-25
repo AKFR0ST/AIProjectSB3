@@ -2,11 +2,12 @@ package com.sb3.mapper;
 
 import com.sb3.dto.student.StudentRequest;
 import com.sb3.dto.student.StudentResponse;
+import com.sb3.dto.student.StudentShortResponse;
+import com.sb3.entity.student.Relative;
 import com.sb3.entity.student.Student;
-import org.mapstruct.CollectionMappingStrategy;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface StudentMapper {
@@ -18,4 +19,21 @@ public interface StudentMapper {
     @Mapping(target = "problemBehaviors", ignore = true)
     @Mapping(target = "selfStimulatoryBehaviors", ignore = true)
     void updateEntity(@MappingTarget Student student, StudentRequest request);
+
+    @Mapping(source = "personalInfo.birthDate", target = "birthDate")
+    @Mapping(source = "medicalInfo.psychiatricDiagnosis", target = "diagnosis")
+    @Mapping(source = "schoolInfo.type", target = "schoolType")
+    @Mapping(source = "personalInfo.relatives", target = "relativeName", qualifiedByName = "firstRelativeName")
+    @Mapping(source = "personalInfo.relatives", target = "relativePhone", qualifiedByName = "firstRelativePhone")
+    StudentShortResponse toShortResponse(Student student);
+
+    @Named("firstRelativeName")
+    default String firstRelativeName(List<Relative> relatives) {
+        return (relatives != null && !relatives.isEmpty()) ? relatives.getFirst().getFullName() : null;
+    }
+
+    @Named("firstRelativePhone")
+    default String firstRelativePhone(List<Relative> relatives) {
+        return (relatives != null && !relatives.isEmpty()) ? relatives.getFirst().getPhone() : null;
+    }
 }

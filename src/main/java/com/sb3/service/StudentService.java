@@ -1,6 +1,7 @@
 package com.sb3.service;
 
 import com.sb3.dto.student.StudentRequest;
+import com.sb3.dto.student.StudentShortResponse;
 import com.sb3.dto.student.StudentsListResponse;
 import com.sb3.entity.student.PersonalInfo;
 import com.sb3.entity.student.Student;
@@ -8,6 +9,8 @@ import com.sb3.dto.student.StudentResponse;
 import com.sb3.mapper.StudentMapper;
 import com.sb3.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -60,6 +63,10 @@ public class StudentService {
 
         student = repository.save(student);
         return studentMapper.toDto(student);
+    }
+
+    public Page<StudentShortResponse> getShortList(Pageable pageable) {
+        return repository.findAll(pageable).map(studentMapper::toShortResponse);
     }
 
     public StudentsListResponse getAll() {
