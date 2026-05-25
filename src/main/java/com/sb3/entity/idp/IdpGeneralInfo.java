@@ -11,6 +11,8 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "idp_general_info")
@@ -60,6 +62,9 @@ public class IdpGeneralInfo {
 
     @Column(name = "approved_at")
     private Instant approvedAt;
+
+    @OneToMany(mappedBy = "idpGeneralInfo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<IdpExercises> exercises = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
