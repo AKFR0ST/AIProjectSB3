@@ -16,11 +16,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import tools.jackson.databind.ObjectMapper;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -38,6 +40,18 @@ public class TaskService {
     private final IdpService idpService;
     private final RestClient restClient = RestClient.builder()
             .baseUrl("http://ai-agent:8089")
+            .requestInterceptor((request, body, execution) -> {
+                log.info("=== HTTP Request ===");
+                log.info("URI: {} {}", request.getMethod(), request.getURI());
+                log.info("Headers: {}", request.getHeaders());
+                log.info("Body length: {}", body.length);
+                log.info("Body content: {}", new String(body, StandardCharsets.UTF_8));
+                ClientHttpResponse response = execution.execute(request, body);
+                log.info("=== HTTP Response ===");
+                log.info("Status: {}", response.getStatusCode());
+                log.info("Headers: {}", response.getHeaders());
+                return response;
+            })
             .build();
 
     public Task createTask(Long gridId) {
