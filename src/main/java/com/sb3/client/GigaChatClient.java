@@ -107,7 +107,7 @@ public class GigaChatClient {
         messages.add(textMessage);
 
         GigaChatBaseRequest requestChat = GigaChatBaseRequest.builder()
-                .model(GIGACHAT_2_PRO.getTitle())  //  TODO брать из конфига
+                .model(GIGACHAT_2_MAX.getTitle())  //  TODO брать из конфига
                 .stream(false)
                 .updateInterval(0)
                 .messages(messages)
