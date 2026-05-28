@@ -16,13 +16,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import tools.jackson.databind.ObjectMapper;
 
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -38,21 +36,7 @@ public class TaskService {
     private final GridService gridService;
     private final ObjectMapper objectMapper;
     private final IdpService idpService;
-    private final RestClient restClient = RestClient.builder()
-            .baseUrl("http://ai-agent:8089")
-            .requestInterceptor((request, body, execution) -> {
-                log.info("=== HTTP Request ===");
-                log.info("URI: {} {}", request.getMethod(), request.getURI());
-                log.info("Headers: {}", request.getHeaders());
-                log.info("Body length: {}", body.length);
-                log.info("Body content: {}", new String(body, StandardCharsets.UTF_8));
-                ClientHttpResponse response = execution.execute(request, body);
-                log.info("=== HTTP Response ===");
-                log.info("Status: {}", response.getStatusCode());
-                log.info("Headers: {}", response.getHeaders());
-                return response;
-            })
-            .build();
+    private final RestClient restClient;
 
     public Task createTask(Long gridId) {
         log.info(CREATING_TASK_FOR_GRID, gridId);
@@ -90,13 +74,11 @@ public class TaskService {
 
             log.info("Sending to agent: {}", objectMapper.writeValueAsString(request));
 
-            String requestJson = objectMapper.writeValueAsString(request);
-
             GenerateExercisesResponse agentResponse = restClient
                     .post()
                     .uri("/agent/generate-exercises")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body(requestJson)
+                    .body(request)
                     .retrieve()
                     .body(GenerateExercisesResponse.class);
 
