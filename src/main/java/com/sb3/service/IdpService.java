@@ -32,6 +32,7 @@ public class IdpService {
     private final StudentRepository studentRepository;
     private final IdpMapper mapper;
     private final ObjectMapper objectMapper;
+    private final IdpGeneralContextBuilder idpGeneralContextBuilder;
 
     // General Info
     public IdpGeneralInfoResponse createGeneralInfo(IdpGeneralInfoRequest request) {
@@ -170,7 +171,10 @@ public class IdpService {
         String code = student.getStudentCode() != null ? student.getStudentCode() : "";
         contentMap.put("student", Map.of("code", code));
         contentMap.put("skills", exercises);
-        contentMap.put("general_info", getLastGeneralInfo(grid.getStudent().getId()));
+        contentMap.put(
+                "general_info",
+                idpGeneralContextBuilder.build(student)
+        );
 
         generalInfo.setContent(writeJson(contentMap));
         generalInfo = generalInfoRepository.save(generalInfo);
@@ -185,25 +189,6 @@ public class IdpService {
             entity.setStatus("draft");
             entity.setCreatedAt(Instant.now());
             exercisesRepository.save(entity);
-        }
-    }
-
-    private Map<String, Object> getLastGeneralInfo(Long studentId) {
-        return generalInfoRepository.findByStudentIdOrderByVersionDesc(studentId)
-                .stream()
-                .findFirst()
-                .map(IdpGeneralInfo::getContent)
-                .map(this::parseGeneralInfo)
-                .orElseGet(HashMap::new);
-    }
-
-    private Map<String, Object> parseGeneralInfo(String content) {
-        try {
-            Map<String, Object> map = objectMapper.readValue(content, Map.class);
-            Object generalInfo = map.get("general_info");
-            return generalInfo instanceof Map ? (Map<String, Object>) generalInfo : new HashMap<>();
-        } catch (Exception e) {
-            return new HashMap<>();
         }
     }
 
