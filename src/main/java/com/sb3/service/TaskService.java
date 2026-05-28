@@ -74,6 +74,8 @@ public class TaskService {
 
             GenerateExercisesRequest request = buildRequest(grid);
 
+            log.info("Sending to agent: {}", objectMapper.writeValueAsString(request));
+
             GenerateExercisesResponse agentResponse = restClient
                     .post()
                     .uri("/agent/generate-exercises")
