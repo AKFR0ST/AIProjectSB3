@@ -76,11 +76,13 @@ public class TaskService {
 
             log.info("Sending to agent: {}", objectMapper.writeValueAsString(request));
 
+            String requestJson = objectMapper.writeValueAsString(request);
+
             GenerateExercisesResponse agentResponse = restClient
                     .post()
                     .uri("/agent/generate-exercises")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body(request)
+                    .body(requestJson)
                     .retrieve()
                     .body(GenerateExercisesResponse.class);
 
