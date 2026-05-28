@@ -1,14 +1,8 @@
-package com.sb3.entity.skill;
+package com.sb3.dto.skill;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import tools.jackson.databind.PropertyNamingStrategies;
-import tools.jackson.databind.annotation.JsonNaming;
-
-import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +14,9 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SkillExercise {
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public class SkillExerciseDto {
 
     private List<String> skillCodes;
 
@@ -40,7 +36,7 @@ public class SkillExercise {
 
     private String materials;
 
-    private MasteryCriterion masteryCriterion;
+    private MasteryCriterionDto masteryCriterion;
 
-    private Exercises exercises;
+    private ExercisesDto exercises;
 }

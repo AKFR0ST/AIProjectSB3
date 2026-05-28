@@ -1,21 +1,20 @@
 package com.sb3.service;
 
 import com.sb3.constant.ErrorMessages;
-import com.sb3.entity.grid.GenerateExercisesRequest;
-import com.sb3.entity.grid.GenerateExercisesResponse;
+import com.sb3.dto.exercise.ExercisesResponseDto;
+import com.sb3.dto.exercise.ExercisesRequestDto;
 import com.sb3.entity.grid.Grid;
 import com.sb3.entity.grid.SkillScore;
-import com.sb3.entity.skill.SkillExercise;
 import com.sb3.entity.task.Task;
 import com.sb3.entity.task.TaskStatus;
 import com.sb3.exception.NotFoundException;
 import com.sb3.exception.TaskNotFoundException;
+import com.sb3.mapper.SkillExerciseMapper;
 import com.sb3.repository.GridRepository;
 import com.sb3.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -37,6 +36,7 @@ public class TaskService {
     private final ObjectMapper objectMapper;
     private final IdpService idpService;
     private final RestClient restClient;
+    private final SkillExerciseMapper skillExerciseMapper;
 
     public Task createTask(Long gridId) {
         log.info(CREATING_TASK_FOR_GRID, gridId);
@@ -70,32 +70,28 @@ public class TaskService {
             Grid grid = gridRepository.findByIdWithScores(task.getGridId())
                     .orElseThrow(() -> new NotFoundException("Grid not found: " + task.getGridId()));
 
-            GenerateExercisesRequest request = buildRequest(grid);
+            ExercisesRequestDto request = buildRequest(grid);
 
             log.info("Sending to agent: {}", objectMapper.writeValueAsString(request));
 
-            GenerateExercisesResponse agentResponse = restClient
+            ExercisesResponseDto agentResponse = restClient
                     .post()
                     .uri("/agent/generate-exercises")
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(request)
                     .retrieve()
-                    .body(GenerateExercisesResponse.class);
+                    .body(ExercisesResponseDto.class);
 
             if (agentResponse == null || "error".equals(agentResponse.getStatus())) {
-                throw new RuntimeException("Agent error: " + agentResponse.getMessage());
+                throw new RuntimeException("Agent error: " + (agentResponse != null ? agentResponse.getMessage() : "null response"));
             }
 
             String resultJson = objectMapper.writeValueAsString(agentResponse.getDraft());
             task.setResult(resultJson);
             task.setStatus(TaskStatus.DONE);
 
-            log.info(TASK_PROCESSED_SUCCESSFULLY, taskId);
-
             if (agentResponse.getDraft() != null) {
-
-                    idpService.saveExercisesFromAgent(grid, agentResponse.getDraft());
-
+                idpService.saveExercisesFromAgent(grid, skillExerciseMapper.toEntityList(agentResponse.getDraft()));
             }
 
         } catch (Exception e) {
@@ -108,13 +104,13 @@ public class TaskService {
         repository.save(task);
     }
 
-    private GenerateExercisesRequest buildRequest(Grid grid) {
+    private ExercisesRequestDto buildRequest(Grid grid) {  //  TODO to mapstruct
         Map<String, Integer> scores = new HashMap<>();
         for (SkillScore score : grid.getScores()) {
             scores.put(score.getSkill().getCode(), score.getScore());
         }
 
-        return GenerateExercisesRequest.builder()
+        return ExercisesRequestDto.builder()
                 .studentId(grid.getStudent().getId())
                 .scores(scores)
                 .build();

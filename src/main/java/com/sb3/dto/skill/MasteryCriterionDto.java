@@ -1,5 +1,7 @@
-package com.sb3.entity.skill;
+package com.sb3.dto.skill;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MasteryCriterion {
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public class MasteryCriterionDto {
 
     private String evaluationUnit;
 

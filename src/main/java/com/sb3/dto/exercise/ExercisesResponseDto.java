@@ -1,6 +1,6 @@
-package com.sb3.entity.grid;
+package com.sb3.dto.exercise;
 
-import com.sb3.entity.skill.SkillExercise;
+import com.sb3.dto.skill.SkillExerciseDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,8 +10,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GenerateExercisesResponse {  //  TODO Под удаление
+public class ExercisesResponseDto {
     private String status;
-    private List<SkillExercise> draft;
+    private List<SkillExerciseDto> draft;
     private String message;
 }
