@@ -15,13 +15,13 @@ import java.util.List;
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class SkillExercise {
-    private String skillCode;
-    private String scale;
+    private List<String> skillCodes;      // было String skillCode
+    private String category;              // было String scale
     private String name;
     private String goal;
     private String procedure;
     private String prompt;
-    private String masteryCriterion;
-    private String dataCollection;
-    private List<String> exercises;
+    private MasteryCriterion masteryCriterion;  // было String
+    private List<ExerciseItem> exercises;       // был List<String>
+    // dataCollection — удалить
 }

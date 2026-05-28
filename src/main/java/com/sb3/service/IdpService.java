@@ -179,7 +179,7 @@ public class IdpService {
             IdpExercises entity = new IdpExercises();
             entity.setIdpGeneralInfo(generalInfo);
             entity.setSkillCodes(
-                    exercise.getSkillCode() != null ? List.of(exercise.getSkillCode()) : List.of()
+                    exercise.getSkillCodes() != null ? exercise.getSkillCodes() : List.of()
             );
             entity.setContent(writeJson(exercise));
             entity.setStatus("draft");
