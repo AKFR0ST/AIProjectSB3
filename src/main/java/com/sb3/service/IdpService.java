@@ -157,37 +157,62 @@ public class IdpService {
     }
 
     @Transactional
-    public void saveExercisesFromAgent(Grid grid, List<SkillExercise> exercises) {
+    public void saveExercisesFromAgent(
+            Grid grid,
+            List<SkillExercise> exercises,
+            Object generalInfoDraft
+    ) {
+
         Student student = studentRepository.findById(grid.getStudent().getId())
                 .orElseThrow(() -> new NotFoundException("Студент не найден"));
 
-        IdpGeneralInfo generalInfo = new IdpGeneralInfo(); // TODO На рефакторинг - general info должен браться из анкеты
+        IdpGeneralInfo generalInfo = new IdpGeneralInfo();
+
         generalInfo.setGrid(grid);
         generalInfo.setStudent(student);
         generalInfo.setStatus("draft");
         generalInfo.setVersion(1);
+        generalInfo.setCreatedAt(Instant.now());
 
         Map<String, Object> contentMap = new HashMap<>();
-        String code = student.getStudentCode() != null ? student.getStudentCode() : "";
-        contentMap.put("student", Map.of("code", code));
+
+        String code = student.getStudentCode() != null
+                ? student.getStudentCode()
+                : "";
+
+        contentMap.put(
+                "student",
+                Map.of("code", code)
+        );
+
         contentMap.put("skills", exercises);
+
         contentMap.put(
                 "general_info",
-                idpGeneralContextBuilder.build(student)
+                generalInfoDraft
         );
 
         generalInfo.setContent(writeJson(contentMap));
+
         generalInfo = generalInfoRepository.save(generalInfo);
 
         for (SkillExercise exercise : exercises) {
+
             IdpExercises entity = new IdpExercises();
+
             entity.setIdpGeneralInfo(generalInfo);
+
             entity.setSkillCodes(
-                    exercise.getSkillCodes() != null ? exercise.getSkillCodes() : List.of()
+                    exercise.getSkillCodes() != null
+                            ? exercise.getSkillCodes()
+                            : List.of()
             );
+
             entity.setContent(writeJson(exercise));
+
             entity.setStatus("draft");
             entity.setCreatedAt(Instant.now());
+
             exercisesRepository.save(entity);
         }
     }
