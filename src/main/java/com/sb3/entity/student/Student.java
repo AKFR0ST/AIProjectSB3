@@ -1,5 +1,6 @@
 package com.sb3.entity.student;
 
+import com.sb3.entity.grid.Grid;
 import com.sb3.entity.idp.IdpGeneralInfo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -105,4 +106,7 @@ public class Student {
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<IdpGeneralInfo> idpGeneralInfoList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Grid> grids = new ArrayList<>();
 }
