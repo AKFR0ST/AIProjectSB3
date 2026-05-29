@@ -88,9 +88,9 @@ public class GridService {
     }
 
 
-    public void markDone(Long gridId) {
+    public void setStatus(Long gridId, GridStatus gridStatus) {
         Grid grid = gridRepository.findById(gridId).orElseThrow();
-        grid.setGridStatus(GridStatus.DONE);
+        grid.setGridStatus(gridStatus);
         gridRepository.save(grid);
     }
 

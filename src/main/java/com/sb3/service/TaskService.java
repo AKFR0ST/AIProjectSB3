@@ -1,6 +1,7 @@
 package com.sb3.service;
 
 import com.sb3.constant.ErrorMessages;
+import com.sb3.constant.GridStatus;
 import com.sb3.dto.exercise.ExercisesRequestDto;
 import com.sb3.dto.exercise.ExercisesResponseDto;
 import com.sb3.dto.idp.GenerateGeneralInfoRequestDto;
@@ -28,6 +29,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
+import static com.sb3.constant.GridStatus.PROCESSING;
 import static com.sb3.constant.LoggerMessages.*;
 
 @Slf4j
@@ -55,7 +57,7 @@ public class TaskService {
 
         LocalDateTime now = LocalDateTime.now();
 
-        gridService.markDone(gridId);
+        gridService.setStatus(gridId, PROCESSING);
 
         return repository.save(
                 Task.builder()
@@ -158,6 +160,7 @@ public class TaskService {
                 );
             }
 
+            gridService.setStatus(grid.getId(), GridStatus.DONE);
             task.setStatus(TaskStatus.DONE);
 
             log.info(TASK_PROCESSED_SUCCESSFULLY, taskId);
