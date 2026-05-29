@@ -57,13 +57,13 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService users() {
         UserDetails user = User.builder()
-                .username("user")
+                .username("user@user.ru")
                 .password("{noop}user")
                 .roles(ROLE_USER)
                 .build();
 
         UserDetails admin = User.builder()
-                .username("admin")
+                .username("admin@admin.ru")
                 .password("{noop}admin")
                 .roles(ROLE_ADMIN)
                 .build();
