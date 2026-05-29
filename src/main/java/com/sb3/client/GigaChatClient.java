@@ -5,6 +5,7 @@ import com.sb3.dto.llm.GigaChat.GigaChatBaseRequest;
 import com.sb3.dto.llm.GigaChat.GigaChatBaseResponse;
 import com.sb3.dto.llm.GigaChat.GigaChatRequestMessage;
 import com.sb3.dto.llm.GigaChat.GigaChatResponseToken;
+import com.sb3.entity.llm.GigaChatModels;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.http.HttpStatus;
@@ -17,9 +18,6 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import static com.sb3.constant.GigaChatConstants.*;
-import static com.sb3.entity.llm.GigaChatModels.GIGACHAT_2_MAX;
-import static com.sb3.entity.llm.GigaChatModels.GIGACHAT_2_PRO;
-
 
 @Component
 public class GigaChatClient {
@@ -27,6 +25,7 @@ public class GigaChatClient {
     private final String authKey;
     private final String authUrl;
     private final String baseUrl;
+    private final GigaChatModels llmModel;
 
     private RestClient authRestClient;
     private RestClient baseRestClient;
@@ -35,12 +34,14 @@ public class GigaChatClient {
     public GigaChatClient(
             @Value("${gigachat.auth.url}") String authUrl,
             @Value("${gigachat.authorization.key}") String authKey,
-            @Value("${gigachat.base.url}") String baseUrl
+            @Value("${gigachat.base.url}") String baseUrl,
+            @Value("${gigachat.llm.model}") GigaChatModels llmModel
 
     ) {
         this.authKey = authKey;
         this.authUrl = authUrl;
         this.baseUrl = baseUrl;
+        this.llmModel = llmModel;
 
         updateAuthClient();
         updateBaseClient();
@@ -107,7 +108,7 @@ public class GigaChatClient {
         messages.add(textMessage);
 
         GigaChatBaseRequest requestChat = GigaChatBaseRequest.builder()
-                .model(GIGACHAT_2_MAX.getTitle())  //  TODO брать из конфига
+                .model(llmModel.getTitle())
                 .stream(false)
                 .updateInterval(0)
                 .messages(messages)
