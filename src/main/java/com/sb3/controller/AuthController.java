@@ -23,7 +23,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest request) {
         Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
         String role = auth.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -31,7 +31,7 @@ public class AuthController {
                 .orElse("ROLE_USER")
                 .replace("ROLE_", "");
 
-        String token = jwtUtil.generateToken(request.getUsername(), role);
+        String token = jwtUtil.generateToken(request.getEmail(), role);
 
         return ResponseEntity.ok(Map.of("token", token, "role", role));
     }
