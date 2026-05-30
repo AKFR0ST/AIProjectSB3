@@ -13,6 +13,8 @@ import com.sb3.repository.IdpGeneralInfoRepository;
 import com.sb3.repository.StudentRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
 
@@ -27,6 +29,7 @@ import java.util.Map;
 @Transactional
 public class IdpService {
 
+    private static final Logger log = LoggerFactory.getLogger(IdpService.class);
     private final IdpGeneralInfoRepository generalInfoRepository;
     private final IdpExercisesRepository exercisesRepository;
     private final StudentRepository studentRepository;
@@ -206,7 +209,11 @@ public class IdpService {
                             : List.of()
             );
 
+            log.info("!!!!!!!!!!!!!!!!MasteryCriterion: {}", exercise.getMasteryCriterion());  // TODO не забыть убрать
+
             entity.setContent(writeJson(exercise));
+
+            log.info("!!!!!!!!!!!!!!!!!Content: {}", entity.getContent());
 
             entity.setStatus("draft");
             entity.setCreatedAt(Instant.now());

@@ -147,6 +147,8 @@ public class TaskService {
                     exercisesResponseDto.getDraft()
             );
 
+            log.info("MR FROM AGENT: {}", exercisesResponseDto.getDraft().getFirst().getMasteryCriterion().toString());
+
             log.info("Exercises from agent: {}", objectMapper.writeValueAsString(exercisesResponseDto.getDraft()));
 
             task.setResult(resultJson);  //  TODO убрать из модели - эти данные сложатся в IDP
