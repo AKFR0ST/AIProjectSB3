@@ -97,7 +97,7 @@ public class TaskService {
                     objectMapper.writeValueAsString(exercisesRequest)
             );
 
-            ExercisesResponseDto exercisesResponse = restClient
+            ExercisesResponseDto exercisesResponseDto = restClient
                     .post()
                     .uri("/agent/generate-exercises")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -105,14 +105,14 @@ public class TaskService {
                     .retrieve()
                     .body(ExercisesResponseDto.class);
 
-            if (exercisesResponse == null
-                    || "error".equals(exercisesResponse.getStatus())) {
+            if (exercisesResponseDto == null
+                    || "error".equals(exercisesResponseDto.getStatus())) {
 
                 throw new RuntimeException(
                         "Agent exercises error: "
                                 + (
-                                exercisesResponse != null
-                                        ? exercisesResponse.getMessage()
+                                exercisesResponseDto != null
+                                        ? exercisesResponseDto.getMessage()
                                         : "null response"
                         )
                 );
@@ -144,17 +144,19 @@ public class TaskService {
             }
 
             String resultJson = objectMapper.writeValueAsString(
-                    exercisesResponse.getDraft()
+                    exercisesResponseDto.getDraft()
             );
 
-            task.setResult(resultJson);
+            log.info("Exercises from agent: {}", objectMapper.writeValueAsString(exercisesResponseDto.getDraft()));
 
-            if (exercisesResponse.getDraft() != null) {
+            task.setResult(resultJson);  //  TODO убрать из модели - эти данные сложатся в IDP
+
+            if (exercisesResponseDto.getDraft() != null) {
 
                 idpService.saveExercisesFromAgent(
                         grid,
                         skillExerciseMapper.toEntityList(
-                                exercisesResponse.getDraft()
+                                exercisesResponseDto.getDraft()
                         ),
                         generalInfoResponse.getDraft()
                 );

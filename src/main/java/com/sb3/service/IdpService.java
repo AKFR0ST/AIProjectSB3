@@ -185,8 +185,6 @@ public class IdpService {
                 Map.of("code", code)
         );
 
-        contentMap.put("skills", exercises);
-
         contentMap.put(
                 "general_info",
                 generalInfoDraft
