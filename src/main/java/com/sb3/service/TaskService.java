@@ -97,13 +97,17 @@ public class TaskService {
                     objectMapper.writeValueAsString(exercisesRequest)
             );
 
-            ExercisesResponseDto exercisesResponseDto = restClient
+            String responseJsonExercise = restClient   //  TODO При переходе на Camel вернуть старую версию.
                     .post()
                     .uri("/agent/generate-exercises")
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(exercisesRequest)
                     .retrieve()
-                    .body(ExercisesResponseDto.class);
+                    .body(String.class);
+
+            log.info("Agent response body: {}", responseJsonExercise);
+
+            ExercisesResponseDto exercisesResponseDto = objectMapper.readValue(responseJsonExercise, ExercisesResponseDto.class);
 
             if (exercisesResponseDto == null
                     || "error".equals(exercisesResponseDto.getStatus())) {
@@ -118,7 +122,7 @@ public class TaskService {
                 );
             }
 
-            GenerateGeneralInfoResponseDto generalInfoResponse = restClient
+            String jsonResponseGeneralInfo = restClient
                     .post()
                     .uri("/agent/generate-general-info")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -128,16 +132,18 @@ public class TaskService {
                                     .build()
                     )
                     .retrieve()
-                    .body(GenerateGeneralInfoResponseDto.class);
+                    .body(String.class);
 
-            if (generalInfoResponse == null
-                    || "error".equals(generalInfoResponse.getStatus())) {
+            GenerateGeneralInfoResponseDto generateGeneralInfoResponseDto = objectMapper.readValue(jsonResponseGeneralInfo, GenerateGeneralInfoResponseDto.class);
+
+            if (generateGeneralInfoResponseDto == null
+                    || "error".equals(generateGeneralInfoResponseDto.getStatus())) {
 
                 throw new RuntimeException(
                         "Agent general-info error: "
                                 + (
-                                generalInfoResponse != null
-                                        ? generalInfoResponse.getMessage()
+                                generateGeneralInfoResponseDto != null
+                                        ? generateGeneralInfoResponseDto.getMessage()
                                         : "null response"
                         )
                 );
@@ -158,7 +164,7 @@ public class TaskService {
                         skillExerciseMapper.toEntityList(
                                 exercisesResponseDto.getDraft()
                         ),
-                        generalInfoResponse.getDraft()
+                        generateGeneralInfoResponseDto.getDraft()
                 );
             }
 

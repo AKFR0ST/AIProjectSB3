@@ -209,11 +209,7 @@ public class IdpService {
                             : List.of()
             );
 
-            log.info("!!!!!!!!!!!!!!!!MasteryCriterion: {}", exercise.getMasteryCriterion());  // TODO не забыть убрать
-
             entity.setContent(writeJson(exercise));
-
-            log.info("!!!!!!!!!!!!!!!!!Content: {}", entity.getContent());
 
             entity.setStatus("draft");
             entity.setCreatedAt(Instant.now());
