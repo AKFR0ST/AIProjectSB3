@@ -97,13 +97,17 @@ public class TaskService {
                     objectMapper.writeValueAsString(exercisesRequest)
             );
 
-            ExercisesResponseDto exercisesResponseDto = restClient
+            String responseJson = restClient   //  TODO ВЕРНУТЬ!!!!
                     .post()
                     .uri("/agent/generate-exercises")
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(exercisesRequest)
                     .retrieve()
-                    .body(ExercisesResponseDto.class);
+                    .body(String.class);
+
+            log.info("Agent response body: {}", responseJson);
+
+            ExercisesResponseDto exercisesResponseDto = objectMapper.readValue(responseJson, ExercisesResponseDto.class);
 
             if (exercisesResponseDto == null
                     || "error".equals(exercisesResponseDto.getStatus())) {
