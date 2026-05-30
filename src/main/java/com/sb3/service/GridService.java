@@ -10,6 +10,7 @@ import com.sb3.repository.GridRepository;
 import com.sb3.repository.SkillRepository;
 import com.sb3.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GridService {
@@ -89,6 +91,7 @@ public class GridService {
 
 
     public void setStatus(Long gridId, GridStatus gridStatus) {
+        log.info("Setting grid {} status to {}", gridId, gridStatus);
         Grid grid = gridRepository.findById(gridId).orElseThrow();
         grid.setGridStatus(gridStatus);
         gridRepository.save(grid);

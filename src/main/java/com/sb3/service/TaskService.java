@@ -57,7 +57,7 @@ public class TaskService {
 
         LocalDateTime now = LocalDateTime.now();
 
-        gridService.setStatus(gridId, PROCESSING);
+        gridService.setStatus(gridId, GridStatus.PROCESSING);
 
         return repository.save(
                 Task.builder()
