@@ -49,7 +49,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, TASKS).hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
-                .httpBasic(Customizer.withDefaults())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
