@@ -1,5 +1,6 @@
 package com.sb3.entity.skill;
 
+import com.sb3.dto.skill.ErrorCorrection;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,7 +37,7 @@ public class SkillExercise {
 
     private String prompt;
 
-    private String errorCorrection;
+    private ErrorCorrection errorCorrection;
 
     private String materials;
 

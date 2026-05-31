@@ -32,7 +32,7 @@ public class SkillExerciseDto {
 
     private String prompt;
 
-    private String errorCorrection;
+    private ErrorCorrection errorCorrection;
 
     private String materials;
 

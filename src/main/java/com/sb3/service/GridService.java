@@ -92,7 +92,7 @@ public class GridService {
 
     public void setStatus(Long gridId, GridStatus gridStatus) {
         log.info("Setting grid {} status to {}", gridId, gridStatus);
-        Grid grid = gridRepository.findById(gridId).orElseThrow();
+        Grid grid = gridRepository.findById(gridId).orElseThrow(() -> new RuntimeException("Grid not found"));
         grid.setGridStatus(gridStatus);
         gridRepository.save(grid);
     }
