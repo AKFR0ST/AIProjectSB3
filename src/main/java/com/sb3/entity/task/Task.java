@@ -29,6 +29,7 @@ public class Task {
     @Column(columnDefinition = "text")
     private String result;
 
+    @Column(columnDefinition = "text")
     private String error;
 
     private LocalDateTime createdAt;
