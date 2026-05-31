@@ -182,14 +182,18 @@ public class TaskService {
                     e
             );
 
+            gridService.setStatus(task.getGridId(), GridStatus.DRAFT);
             task.setStatus(TaskStatus.FAILED);
 
             task.setError(e.getMessage());
         }
 
-        task.setUpdatedAt(LocalDateTime.now());
+        finally {
+            task.setUpdatedAt(LocalDateTime.now());
 
-        repository.save(task);
+            repository.save(task);
+        }
+
     }
 
     private ExercisesRequestDto buildRequest(Grid grid) {

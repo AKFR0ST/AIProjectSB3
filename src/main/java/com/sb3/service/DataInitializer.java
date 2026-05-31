@@ -24,7 +24,7 @@ public class DataInitializer implements CommandLineRunner {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) throws Exception {  // TODO думаю, можно убрать. Или доделать.
 
         if (skillRepository.count() > 0) {
             return; // дабы не дублировать
