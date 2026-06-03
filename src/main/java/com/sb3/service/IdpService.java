@@ -1,5 +1,6 @@
 package com.sb3.service;
 
+import com.sb3.constant.ErrorMessages;
 import com.sb3.dto.idp.*;
 import com.sb3.entity.grid.Grid;
 import com.sb3.entity.idp.IdpExercises;
@@ -35,12 +36,11 @@ public class IdpService {
     private final StudentRepository studentRepository;
     private final IdpMapper mapper;
     private final ObjectMapper objectMapper;
-    private final IdpGeneralContextBuilder idpGeneralContextBuilder;
 
     // General Info
     public IdpGeneralInfoResponse createGeneralInfo(IdpGeneralInfoRequest request) {
         Student student = studentRepository.findById(request.getStudentId())
-                .orElseThrow(() -> new NotFoundException("Студент не найден"));
+                .orElseThrow(() -> new NotFoundException(ErrorMessages.STUDENT_NOT_FOUND));
 
         IdpGeneralInfo entity = new IdpGeneralInfo();
         entity.setStudent(student);
@@ -58,9 +58,9 @@ public class IdpService {
                 .stream()
                 .map(entity -> {
                     IdpGeneralInfoResponse response = mapper.toGeneralInfoResponse(entity);
-                    response.setContent(parseJson(entity.getContent()));
-                    response.setOriginalContent(parseJson(entity.getOriginalContent()));
-                    response.setEdits(parseJson(entity.getEdits()));
+                    response.setContent(readJson(entity.getContent()));
+                    response.setOriginalContent(readJson(entity.getOriginalContent()));
+                    response.setEdits(readJson(entity.getEdits()));
                     return response;
                 })
                 .toList();
@@ -70,9 +70,9 @@ public class IdpService {
     public IdpGeneralInfoResponse getGeneralInfo(Long id) {
         IdpGeneralInfo entity = findGeneralInfoById(id);
         IdpGeneralInfoResponse response = mapper.toGeneralInfoResponse(entity);
-        response.setContent(parseJson(entity.getContent()));
-        response.setOriginalContent(parseJson(entity.getOriginalContent()));
-        response.setEdits(parseJson(entity.getEdits()));
+        response.setContent(readJson(entity.getContent()));
+        response.setOriginalContent(readJson(entity.getOriginalContent()));
+        response.setEdits(readJson(entity.getEdits()));
         return response;
     }
 
@@ -142,21 +142,12 @@ public class IdpService {
 
     private IdpGeneralInfo findGeneralInfoById(Long id) {
         return generalInfoRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("IDP запись не найдена"));
+                .orElseThrow(() -> new NotFoundException(ErrorMessages.IDP_NOT_FOUND));
     }
 
     private IdpExercises findExerciseById(Long id) {
         return exercisesRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Упражнение не найдено"));
-    }
-
-    private Object parseJson(String json) {
-        if (json == null) return null;
-        try {
-            return objectMapper.readValue(json, Object.class);
-        } catch (Exception e) {
-            return json;
-        }
+                .orElseThrow(() -> new NotFoundException(ErrorMessages.EXERCISE_NOT_FOUND));
     }
 
     @Transactional
@@ -167,7 +158,7 @@ public class IdpService {
     ) {
 
         Student student = studentRepository.findById(grid.getStudent().getId())
-                .orElseThrow(() -> new NotFoundException("Студент не найден"));
+                .orElseThrow(() -> new NotFoundException(ErrorMessages.STUDENT_NOT_FOUND));
 
         IdpGeneralInfo generalInfo = new IdpGeneralInfo();
 
@@ -218,10 +209,20 @@ public class IdpService {
         }
     }
 
-    private String writeJson(Object obj) {  // TODO на рефакторинг
+    private Object readJson(String json) {
+        if (json == null) return null;
+        try {
+            return objectMapper.readValue(json, Object.class);
+        } catch (Exception e) {
+            return json;
+        }
+    }
+
+    private String writeJson(Object obj) {
         try {
             return objectMapper.writeValueAsString(obj);
         } catch (Exception e) {
+            log.warn(ErrorMessages.COULD_NOT_PARSE_JSON_FIELD_RETURNING_RAW_STRING, e.getMessage());
             throw new RuntimeException(e);
         }
     }

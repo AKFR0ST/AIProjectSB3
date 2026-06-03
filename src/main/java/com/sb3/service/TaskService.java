@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-import static com.sb3.constant.GridStatus.PROCESSING;
 import static com.sb3.constant.LoggerMessages.*;
 
 @Slf4j
@@ -75,7 +74,7 @@ public class TaskService {
         log.info(START_PROCESSING_TASK, taskId);
 
         Task task = repository.findById(taskId)
-                .orElseThrow();
+                .orElseThrow(() -> new TaskNotFoundException(taskId));
 
         try {
 
