@@ -2,6 +2,7 @@ package com.sb3.entity.student;
 
 import com.sb3.entity.grid.Grid;
 import com.sb3.entity.idp.IdpGeneralInfo;
+import com.sb3.entity.teacher.Teacher;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -109,4 +110,8 @@ public class Student {
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Grid> grids = new ArrayList<>();
+
+    @ManyToMany
+    @Builder.Default
+    private List<Teacher> teachers = new ArrayList<>();
 }
