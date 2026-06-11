@@ -13,8 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 @Slf4j
 @Service
@@ -23,23 +26,12 @@ public class TeacherService {
 
     private final TeacherRepository teacherRepository;
     private final TeacherMapper teacherMapper;
-
-    @Transactional
-    public TeacherResponse createTeacher(TeacherRequest request) {
-        log.info("Creating new teacher: {} {}", request.getLastName(), request.getFirstName());
-
-        Teacher teacher = teacherMapper.toEntity(request);
-        teacher = teacherRepository.save(teacher);
-
-        log.info("Teacher created with id: {}", teacher.getId());
-        return teacherMapper.toResponse(teacher);
-    }
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
-    public List<TeacherResponse> getAllTeachers() {
-        return teacherRepository.findAll().stream()
-                .map(teacherMapper::toResponse)
-                .toList();
+    public Page<TeacherResponse> getAllTeachers(Pageable pageable) {
+        return teacherRepository.findAll(pageable)
+                .map(teacherMapper::toResponse);
     }
 
     @Transactional(readOnly = true)
@@ -49,11 +41,45 @@ public class TeacherService {
     }
 
     @Transactional
+    public TeacherResponse createTeacher(TeacherRequest request) {
+        log.info("Creating new teacher: {} {}", request.getLastName(), request.getFirstName());
+
+        Teacher teacher = teacherMapper.toEntity(request);
+        teacher.setPassword(passwordEncoder.encode("password123")); // временный пароль
+        teacher = teacherRepository.save(teacher);
+
+        log.info("Teacher created with id: {}", teacher.getId());
+        return teacherMapper.toResponse(teacher);
+    }
+
+    @Transactional
     public TeacherResponse updateTeacher(Long id, TeacherRequest request) {
         log.info("Updating teacher with id: {}", id);
 
         Teacher teacher = findTeacherById(id);
         teacherMapper.updateEntity(teacher, request);
+        teacher = teacherRepository.save(teacher);
+
+        return teacherMapper.toResponse(teacher);
+    }
+
+    @Transactional
+    public TeacherResponse updateTeacherStatus(Long id, TeacherStatus status) {
+        log.info("Updating teacher status: {} -> {}", id, status);
+
+        Teacher teacher = findTeacherById(id);
+        teacher.setStatus(status);
+        teacher = teacherRepository.save(teacher);
+
+        return teacherMapper.toResponse(teacher);
+    }
+
+    @Transactional
+    public TeacherResponse updateTeacherRole(Long id, UserRole role) {
+        log.info("Updating teacher role: {} -> {}", id, role);
+
+        Teacher teacher = findTeacherById(id);
+        teacher.setRole(role);
         teacher = teacherRepository.save(teacher);
 
         return teacherMapper.toResponse(teacher);
@@ -70,39 +96,8 @@ public class TeacherService {
         teacherRepository.deleteById(id);
     }
 
-    @Transactional
-    public TeacherResponse updateTeacherStatus(Long id, TeacherStatus status) {
-        log.info("Updating teacher status: {} -> {}", id, status);
-
-        Teacher teacher = findTeacherById(id);
-        teacher.setStatus(status);
-        teacher = teacherRepository.save(teacher);
-
-        return teacherMapper.toResponse(teacher);
-    }
-
-    @Transactional
-    public TeacherResponse updatePasswordUpdatedAt(Long id) {
-        Teacher teacher = findTeacherById(id);
-        teacher.setPasswordUpdatedAt(LocalDateTime.now());
-        teacher = teacherRepository.save(teacher);
-
-        return teacherMapper.toResponse(teacher);
-    }
-
     private Teacher findTeacherById(Long id) {
         return teacherRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Teacher not found with id: " + id));
-    }
-
-    @Transactional
-    public TeacherResponse updateTeacherRole(Long id, UserRole role) {
-        log.info("Updating teacher role: {} -> {}", id, role);
-
-        Teacher teacher = findTeacherById(id);
-        teacher.setRole(role);
-        teacher = teacherRepository.save(teacher);
-
-        return teacherMapper.toResponse(teacher);
     }
 }

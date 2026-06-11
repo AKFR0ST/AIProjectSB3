@@ -1,6 +1,7 @@
 package com.sb3.service.teacher;
 
 import com.sb3.constant.TeacherStatus;
+import com.sb3.constant.UserRole;
 import com.sb3.dto.teacher.TeacherRequest;
 import com.sb3.dto.teacher.TeacherResponse;
 import com.sb3.dto.teacher.TeacherStatusRequest;
@@ -15,6 +16,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,6 +41,9 @@ class TeacherServiceTest {
     @Mock
     private TeacherMapper teacherMapper;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     @InjectMocks
     private TeacherService teacherService;
 
@@ -53,6 +62,7 @@ class TeacherServiceTest {
                 .phone("+7 900 101-20-30")
                 .specialization("Логопед-дефектолог")
                 .status(TeacherStatus.ACTIVE)
+                .role(UserRole.TEACHER)
                 .passwordUpdatedAt(LocalDateTime.now())
                 .build();
 
@@ -79,6 +89,7 @@ class TeacherServiceTest {
     void shouldCreateTeacher() {
         // given
         when(teacherMapper.toEntity(request)).thenReturn(teacher);
+        when(passwordEncoder.encode(any(String.class))).thenReturn("encodedPassword");
         when(teacherRepository.save(any(Teacher.class))).thenReturn(teacher);
         when(teacherMapper.toResponse(teacher)).thenReturn(response);
 
@@ -93,21 +104,28 @@ class TeacherServiceTest {
         );
 
         verify(teacherRepository, times(1)).save(any(Teacher.class));
+        verify(passwordEncoder, times(1)).encode(any(String.class));
     }
 
     @Test
-    void shouldGetAllTeachers() {
+    void shouldGetAllTeachersWithPagination() {
         // given
-        List<Teacher> teachers = List.of(teacher);
-        when(teacherRepository.findAll()).thenReturn(teachers);
+        Pageable pageable = PageRequest.of(0, 20);
+        Page<Teacher> teacherPage = new PageImpl<>(List.of(teacher), pageable, 1);
+
+        when(teacherRepository.findAll(pageable)).thenReturn(teacherPage);
         when(teacherMapper.toResponse(any(Teacher.class))).thenReturn(response);
 
         // when
-        List<TeacherResponse> result = teacherService.getAllTeachers();
+        Page<TeacherResponse> result = teacherService.getAllTeachers(pageable);
 
         // then
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).getId()).isEqualTo(1L);
+        assertThat(result).isNotNull();
+        assertThat(result.getContent()).hasSize(1);
+        assertThat(result.getContent().get(0).getId()).isEqualTo(1L);
+        assertThat(result.getTotalElements()).isEqualTo(1);
+
+        verify(teacherRepository, times(1)).findAll(pageable);
     }
 
     @Test
@@ -203,21 +221,19 @@ class TeacherServiceTest {
     }
 
     @Test
-    void shouldUpdatePasswordUpdatedAt() {
+    void shouldUpdateTeacherRole() {
         // given
-        LocalDateTime before = LocalDateTime.now().minusDays(1);
-        teacher.setPasswordUpdatedAt(before);
-
         when(teacherRepository.findById(1L)).thenReturn(Optional.of(teacher));
         when(teacherRepository.save(any(Teacher.class))).thenReturn(teacher);
         when(teacherMapper.toResponse(teacher)).thenReturn(response);
 
         // when
-        TeacherResponse result = teacherService.updatePasswordUpdatedAt(1L);
+        TeacherResponse result = teacherService.updateTeacherRole(1L, UserRole.ADMIN);
 
         // then
         assertThat(result).isNotNull();
-        assertThat(teacher.getPasswordUpdatedAt()).isAfter(before);
+        assertThat(teacher.getRole()).isEqualTo(UserRole.ADMIN);
         verify(teacherRepository, times(1)).save(teacher);
     }
+
 }

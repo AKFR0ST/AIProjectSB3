@@ -11,12 +11,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import com.sb3.dto.common.ListResponse;
 
-import java.util.List;
+import io.swagger.v3.oas.annotations.Operation;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+
 
 @RestController
 @RequestMapping("/api/teachers")
@@ -25,6 +30,35 @@ public class TeacherController {
 
     private final TeacherService teacherService;
 
+    @Operation(summary = "Получить список преподавателей с пагинацией")
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    public ResponseEntity<ListResponse<TeacherResponse>> getAllTeachers(
+            @PageableDefault(size = 20, sort = "lastName", direction = Sort.Direction.ASC) Pageable pageable) {
+
+        Page<TeacherResponse> page = teacherService.getAllTeachers(pageable);
+
+        ListResponse<TeacherResponse> response = ListResponse.<TeacherResponse>builder()
+                .items(page.getContent())
+                .total(page.getTotalElements())
+                .page(page.getNumber())
+                .size(page.getSize())
+                .totalPages(page.getTotalPages())
+                .first(page.isFirst())
+                .last(page.isLast())
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "Получить преподавателя по ID")
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    public ResponseEntity<TeacherResponse> getTeacherById(@PathVariable Long id) {
+        return ResponseEntity.ok(teacherService.getTeacherById(id));
+    }
+
+    @Operation(summary = "Создать преподавателя (только ADMIN)")
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TeacherResponse> createTeacher(@Valid @RequestBody TeacherRequest request) {
@@ -32,18 +66,7 @@ public class TeacherController {
                 .body(teacherService.createTeacher(request));
     }
 
-    @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
-    public ResponseEntity<List<TeacherResponse>> getAllTeachers() {
-        return ResponseEntity.ok(teacherService.getAllTeachers());
-    }
-
-    @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
-    public ResponseEntity<TeacherResponse> getTeacherById(@PathVariable Long id) {
-        return ResponseEntity.ok(teacherService.getTeacherById(id));
-    }
-
+    @Operation(summary = "Обновить преподавателя (только ADMIN)")
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TeacherResponse> updateTeacher(
@@ -52,6 +75,7 @@ public class TeacherController {
         return ResponseEntity.ok(teacherService.updateTeacher(id, request));
     }
 
+    @Operation(summary = "Обновить статус преподавателя (только ADMIN)")
     @PatchMapping("/{id}/status")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TeacherResponse> updateTeacherStatus(
@@ -60,25 +84,20 @@ public class TeacherController {
         return ResponseEntity.ok(teacherService.updateTeacherStatus(id, status));
     }
 
-    @PatchMapping("/{id}/password-updated")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<TeacherResponse> updatePasswordUpdatedAt(@PathVariable Long id) {
-        return ResponseEntity.ok(teacherService.updatePasswordUpdatedAt(id));
-    }
-
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteTeacher(@PathVariable Long id) {
-        teacherService.deleteTeacher(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    // Только для ADMIN: смена роли преподавателя
+    @Operation(summary = "Обновить роль преподавателя (только ADMIN)")
     @PatchMapping("/{id}/role")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TeacherResponse> updateTeacherRole(
             @PathVariable Long id,
             @RequestParam UserRole role) {
         return ResponseEntity.ok(teacherService.updateTeacherRole(id, role));
+    }
+
+    @Operation(summary = "Удалить преподавателя (только ADMIN)")
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteTeacher(@PathVariable Long id) {
+        teacherService.deleteTeacher(id);
+        return ResponseEntity.noContent().build();
     }
 }

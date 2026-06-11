@@ -2,6 +2,8 @@ package com.sb3.repository;
 
 import com.sb3.constant.GridStatus;
 import com.sb3.entity.grid.Grid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,6 +16,8 @@ public interface GridRepository extends JpaRepository<Grid, Long> {
     Optional<Grid> findByStudentIdAndGridStatus(Long id, GridStatus gridStatus);
 
     List<Grid> findAllByStudentId(Long id);
+
+    Page<Grid> findByStudentId(Long studentId, Pageable pageable);
 
     @Query("SELECT g FROM Grid g JOIN FETCH g.scores s JOIN FETCH s.skill WHERE g.id = :id")  //  TODO на рефакторинг
     Optional<Grid> findByIdWithScores(@Param("id") Long id);
