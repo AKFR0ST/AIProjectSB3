@@ -1,6 +1,7 @@
 package com.sb3.controller;
 
 import com.sb3.constant.TeacherStatus;
+import com.sb3.constant.UserRole;
 import com.sb3.dto.teacher.TeacherRequest;
 import com.sb3.dto.teacher.TeacherResponse;
 import com.sb3.service.TeacherService;
@@ -12,6 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
+
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/teachers")
 @RequiredArgsConstructor
@@ -20,22 +26,26 @@ public class TeacherController {
     private final TeacherService teacherService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TeacherResponse> createTeacher(@Valid @RequestBody TeacherRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(teacherService.createTeacher(request));
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     public ResponseEntity<List<TeacherResponse>> getAllTeachers() {
         return ResponseEntity.ok(teacherService.getAllTeachers());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     public ResponseEntity<TeacherResponse> getTeacherById(@PathVariable Long id) {
         return ResponseEntity.ok(teacherService.getTeacherById(id));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TeacherResponse> updateTeacher(
             @PathVariable Long id,
             @Valid @RequestBody TeacherRequest request) {
@@ -43,6 +53,7 @@ public class TeacherController {
     }
 
     @PatchMapping("/{id}/status")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TeacherResponse> updateTeacherStatus(
             @PathVariable Long id,
             @RequestParam TeacherStatus status) {
@@ -50,13 +61,24 @@ public class TeacherController {
     }
 
     @PatchMapping("/{id}/password-updated")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TeacherResponse> updatePasswordUpdatedAt(@PathVariable Long id) {
         return ResponseEntity.ok(teacherService.updatePasswordUpdatedAt(id));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteTeacher(@PathVariable Long id) {
         teacherService.deleteTeacher(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // Только для ADMIN: смена роли преподавателя
+    @PatchMapping("/{id}/role")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<TeacherResponse> updateTeacherRole(
+            @PathVariable Long id,
+            @RequestParam UserRole role) {
+        return ResponseEntity.ok(teacherService.updateTeacherRole(id, role));
     }
 }

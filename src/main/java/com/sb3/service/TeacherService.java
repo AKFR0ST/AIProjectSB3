@@ -1,6 +1,7 @@
 package com.sb3.service;
 
 import com.sb3.constant.TeacherStatus;
+import com.sb3.constant.UserRole;
 import com.sb3.dto.teacher.TeacherRequest;
 import com.sb3.dto.teacher.TeacherResponse;
 import com.sb3.entity.teacher.Teacher;
@@ -92,5 +93,16 @@ public class TeacherService {
     private Teacher findTeacherById(Long id) {
         return teacherRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Teacher not found with id: " + id));
+    }
+
+    @Transactional
+    public TeacherResponse updateTeacherRole(Long id, UserRole role) {
+        log.info("Updating teacher role: {} -> {}", id, role);
+
+        Teacher teacher = findTeacherById(id);
+        teacher.setRole(role);
+        teacher = teacherRepository.save(teacher);
+
+        return teacherMapper.toResponse(teacher);
     }
 }

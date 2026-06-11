@@ -1,35 +1,41 @@
 package com.sb3.config;
 
 import com.sb3.security.JwtFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.web.SecurityFilterChain;
-
-
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import static com.sb3.constant.ApiPaths.*;
-import static com.sb3.constant.SecurityConstants.*;
-
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JwtFilter jwtFilter;
+    private final UserDetailsService userDetailsService;
+
+    private static final String[] SWAGGER_UI = {
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/swagger-ui.html"
+    };
+
+    private static final String TEACHERS = "/api/teachers";
+    private static final String TEACHER_ID = "/api/teachers/{id}";
+    private static final String STUDENTS = "/api/students";
+    private static final String STUDENT_ID = "/api/students/{id}";
+    private static final String TASKS = "/api/tasks";
+    private static final String TASK_ID = "/api/tasks/{id}";
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -37,42 +43,60 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .userDetailsService(userDetailsService)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers(SWAGGER_UI, V_3_API_DOCS, SWAGGER_UI_HTML).permitAll()
-                        .requestMatchers("/api/entities/**", "/api/llm/**", "/api/students/*")
-                        .hasAnyRole("USER", "ADMIN", "AI_AGENT")
-                        .requestMatchers(HttpMethod.POST, TASKS).hasAnyRole("USER", "ADMIN")
+                        // Публичные эндпоинты
+                        .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/api/auth/refresh").permitAll()
+                        .requestMatchers(SWAGGER_UI).permitAll()
+
+                        // AI_AGENT эндпоинты
+                        .requestMatchers("/api/llm/**").hasRole("AI_AGENT")
+                        .requestMatchers("/api/entities/**").hasRole("AI_AGENT")
+
+                        // ADMIN эндпоинты (управление преподавателями)
+                        .requestMatchers(HttpMethod.POST, TEACHERS).hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, TEACHER_ID).hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, TEACHER_ID + "/status").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, TEACHER_ID + "/role").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, TEACHER_ID + "/password-updated").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, TEACHER_ID).hasRole("ADMIN")
+
+                        // Просмотр преподавателей доступен ADMIN и TEACHER
+                        .requestMatchers(HttpMethod.GET, TEACHERS).hasAnyRole("ADMIN", "TEACHER")
+                        .requestMatchers(HttpMethod.GET, TEACHER_ID).hasAnyRole("ADMIN", "TEACHER")
+
+                        // Ученики (CRUD) — доступно TEACHER и ADMIN
+                        .requestMatchers(HttpMethod.GET, STUDENTS).hasAnyRole("TEACHER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, STUDENT_ID).hasAnyRole("TEACHER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, STUDENTS).hasAnyRole("TEACHER", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, STUDENT_ID).hasAnyRole("TEACHER", "ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, STUDENT_ID + "/**").hasAnyRole("TEACHER", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, STUDENT_ID).hasAnyRole("TEACHER", "ADMIN")
+
+                        // Задачи
+                        .requestMatchers(HttpMethod.POST, TASKS).hasAnyRole("TEACHER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, TASKS).hasAnyRole("TEACHER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, TASK_ID).hasAnyRole("TEACHER", "ADMIN")
+
+                        // Аутентифицированные эндпоинты
+                        .requestMatchers("/api/auth/logout").authenticated()
+                        .requestMatchers("/api/auth/change-password").authenticated()
+                        .requestMatchers("/api/auth/me").authenticated()
+
+                        // Всё остальное
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
-    }
-
-    @Bean
-    public UserDetailsService users() {
-        UserDetails user = User.builder()
-                .username("user@user.ru")
-                .password("{noop}user")
-                .roles(ROLE_USER)
-                .build();
-
-        UserDetails admin = User.builder()
-                .username("admin@admin.ru")
-                .password("{noop}admin")
-                .roles(ROLE_ADMIN)
-                .build();
-
-        UserDetails agent = User.builder()
-                .username("agent")
-                .password("{noop}agent-secret-password")
-                .roles(ROLE_AI_AGENT)
-                .build();
-
-        return new InMemoryUserDetailsManager(user, admin, agent);
     }
 }

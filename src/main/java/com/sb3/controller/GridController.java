@@ -43,22 +43,6 @@ public class GridController {
         }
     }
 
-//    private GridResponse mapToGridResponse(Grid grid) {  //  TODO в mapper
-//        GridResponse response = new GridResponse();
-//        response.setCreatedAt(grid.getCreatedAt());
-//        response.setId(grid.getId());
-//        response.setStudentId(grid.getStudent().getId());
-//        response.setTutorId(grid.getTutorId());
-//        response.setGridStatus(grid.getGridStatus());
-//        Map<String, Integer> scoresMap = grid.getScores().stream()
-//                .collect(Collectors.toMap(
-//                        skillScore -> skillScore.getSkill().getCode(),
-//                        SkillScore::getScore
-//                ));
-//        response.setScores(scoresMap);
-//        return response;
-//    }
-
     @Operation(summary = "Передать данные по анкете. Если актуальной анкеты нет, то создать новую.")
     @PostMapping("/")
     public void patchGrid(@RequestBody GridRequest request) {
