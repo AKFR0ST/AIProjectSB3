@@ -1,23 +1,21 @@
 package com.sb3.controller;
 
+import com.sb3.dto.common.ListResponse;
 import com.sb3.dto.student.StudentRequest;
 import com.sb3.dto.student.StudentResponse;
 import com.sb3.dto.student.StudentShortResponse;
 import com.sb3.dto.student.StudentsListResponse;
-import com.sb3.entity.student.Student;
 import com.sb3.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/students")
@@ -45,12 +43,12 @@ public class StudentController {
         return service.get(id);
     }
 
-    @Operation(summary = "Получить список учеников с пагинацией (краткая информация)")
     @GetMapping("/list")
-    public ResponseEntity<Page<StudentShortResponse>> getList(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
-        return ResponseEntity.ok(service.getShortList(PageRequest.of(page, size, Sort.by("id").descending())));
+    public ResponseEntity<ListResponse<StudentShortResponse>> getList(
+            @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        Page<StudentShortResponse> pageResult = service.getShortList(pageable);
+        return ResponseEntity.ok(ListResponse.fromPage(pageResult));
     }
 
     @Operation(summary = "Обновить карточку ученика по id")
