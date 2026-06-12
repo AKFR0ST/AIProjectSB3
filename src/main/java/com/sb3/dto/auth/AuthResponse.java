@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class AuthResponse {
     private String token;
-    private String refreshToken;      // ← добавляем refresh токен
+    private String refreshToken;
     private String email;
     private String fullName;
     private String specialization;
