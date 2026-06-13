@@ -88,8 +88,10 @@ class TeacherServiceTest {
     @Test
     void shouldCreateTeacher() {
         // given
+        request.setPassword("password123");  // ← ДО вызова
+
         when(teacherMapper.toEntity(request)).thenReturn(teacher);
-        when(passwordEncoder.encode(any(String.class))).thenReturn("encodedPassword");
+        when(passwordEncoder.encode(any(String.class))).thenReturn("hashedPassword");
         when(teacherRepository.save(any(Teacher.class))).thenReturn(teacher);
         when(teacherMapper.toResponse(teacher)).thenReturn(response);
 

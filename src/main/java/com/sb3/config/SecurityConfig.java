@@ -10,11 +10,10 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -22,7 +21,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
-    private final UserDetailsService userDetailsService;
 
     private static final String[] SWAGGER_UI = {
             "/swagger-ui/**",
@@ -52,12 +50,12 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .userDetailsService(userDetailsService)
                 .authorizeHttpRequests(auth -> auth
                         // Публичные эндпоинты
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/refresh").permitAll()
                         .requestMatchers(SWAGGER_UI).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/teachers").permitAll()
 
                         // AI_AGENT эндпоинты
                         .requestMatchers("/api/llm/**").hasRole("AI_AGENT")

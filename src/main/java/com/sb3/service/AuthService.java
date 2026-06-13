@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,33 +37,43 @@ public class AuthService {
     public AuthResponse login(LoginRequest request) {
         log.info("Login attempt for email: {}", request.getEmail());
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
+        log.info("Login attempt for email: {}", request.getEmail());
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
+            log.info("Authentication successful: {}", authentication.isAuthenticated());
 
-        Teacher teacher = (Teacher) authentication.getPrincipal();
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String accessToken = jwtService.generateAccessToken(teacher.getEmail(), teacher.getRole().name());
-        String refreshToken = jwtService.generateRefreshToken(teacher.getEmail());
+            Teacher teacher = (Teacher) authentication.getPrincipal();
 
-        Date issuedAt = jwtService.extractIssuedAt(accessToken);
-        Date expiresAt = jwtService.extractExpiration(accessToken);
+            String accessToken = jwtService.generateAccessToken(teacher.getEmail(), teacher.getRole().name());
+            String refreshToken = jwtService.generateRefreshToken(teacher.getEmail());
 
-        log.info("User logged in successfully: {} with role: {}", teacher.getEmail(), teacher.getRole());
+            Date issuedAt = jwtService.extractIssuedAt(accessToken);
+            Date expiresAt = jwtService.extractExpiration(accessToken);
 
-        return AuthResponse.builder()
-                .token(accessToken)
-                .refreshToken(refreshToken)
-                .email(teacher.getEmail())
-                .fullName(teacher.getFirstName() + " " + teacher.getLastName())
-                .specialization(teacher.getSpecialization())
-                .role(teacher.getRole().name())
-                .expiresIn(jwtService.getExpiresIn(accessToken))
-                .issuedAt(LocalDateTime.ofInstant(issuedAt.toInstant(), ZoneId.systemDefault()))
-                .expiresAt(LocalDateTime.ofInstant(expiresAt.toInstant(), ZoneId.systemDefault()))
-                .build();
+            log.info("User logged in successfully: {} with role: {}", teacher.getEmail(), teacher.getRole());
+
+            return AuthResponse.builder()
+                    .token(accessToken)
+                    .refreshToken(refreshToken)
+                    .email(teacher.getEmail())
+                    .fullName(teacher.getFirstName() + " " + teacher.getLastName())
+                    .specialization(teacher.getSpecialization())
+                    .role(teacher.getRole().name())
+                    .expiresIn(jwtService.getExpiresIn(accessToken))
+                    .issuedAt(LocalDateTime.ofInstant(issuedAt.toInstant(), ZoneId.systemDefault()))
+                    .expiresAt(LocalDateTime.ofInstant(expiresAt.toInstant(), ZoneId.systemDefault()))
+                    .build();
+
+        } catch (AuthenticationException e) {
+            log.error("Authentication failed: {}", e.getMessage(), e);
+            throw e;
+        }
+
     }
 
     public AuthResponse refreshToken(RefreshTokenRequest request) {

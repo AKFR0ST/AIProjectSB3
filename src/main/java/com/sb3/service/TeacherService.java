@@ -45,7 +45,7 @@ public class TeacherService {
         log.info("Creating new teacher: {} {}", request.getLastName(), request.getFirstName());
 
         Teacher teacher = teacherMapper.toEntity(request);
-        teacher.setPassword(passwordEncoder.encode("password123")); // временный пароль
+        teacher.setPassword(passwordEncoder.encode(request.getPassword())); // временный пароль
         teacher = teacherRepository.save(teacher);
 
         log.info("Teacher created with id: {}", teacher.getId());
