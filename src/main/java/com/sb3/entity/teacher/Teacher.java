@@ -64,7 +64,7 @@ public class Teacher implements UserDetails {
     @Column(name = "password_updated_at")
     private LocalDateTime passwordUpdatedAt;
 
-    @ManyToMany(mappedBy = "teachers")
+    @ManyToMany(mappedBy = "teachers", fetch = FetchType.EAGER)
     @Builder.Default
     private List<Student> students = new ArrayList<>();
 
