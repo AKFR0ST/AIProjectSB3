@@ -4,6 +4,7 @@ import com.sb3.dto.idp.TrialRequest;
 import com.sb3.dto.idp.TrialResponse;
 import com.sb3.service.TrialService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class TrialController {
     @PostMapping
     public ResponseEntity<TrialResponse> createTrial(
             @PathVariable("exercise_id") Long exerciseId,
-            @RequestBody TrialRequest request) {
+            @RequestBody @Valid TrialRequest request) {
         return ResponseEntity.status(201).body(service.createTrial(exerciseId, request));
     }
 

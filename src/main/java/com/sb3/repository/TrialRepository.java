@@ -10,7 +10,7 @@ import java.util.UUID;
 @Repository
 public interface TrialRepository extends JpaRepository<Trial, UUID> {
 
-    List<Trial> findByExerciseIdAndTrialDateBetweenOrderByCreatedAtDesc(
+    List<Trial> findByExerciseIdAndCreatedAtBetweenOrderByCreatedAtDesc(
             Long exerciseId, Instant from, Instant to);
 
     List<Trial> findByExerciseIdOrderByCreatedAtDesc(Long exerciseId);

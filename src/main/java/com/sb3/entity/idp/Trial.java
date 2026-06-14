@@ -1,5 +1,7 @@
 package com.sb3.entity.idp;
 
+import com.sb3.constant.TrialMode;
+import com.sb3.constant.TrialResult;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.Instant;
@@ -21,14 +23,16 @@ public class Trial {
     @JoinColumn(name = "exercise_id", nullable = false)
     private IdpExercises exercise;
 
-    @Column(nullable = false, length = 1)
-    private String grade; // "С", "П", "О", "Н"
+    @Column(name = "target", length = 500)
+    private String target;
 
-    @Column(name = "trial_date", nullable = false)
-    private Instant trialDate;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TrialMode mode;
 
-    @Column(columnDefinition = "text")
-    private String note;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TrialResult result;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;

@@ -1,5 +1,7 @@
 package com.sb3.dto.idp;
 
+import com.sb3.constant.TrialMode;
+import com.sb3.constant.TrialResult;
 import lombok.*;
 import java.time.Instant;
 
@@ -8,7 +10,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TrialRequest {
-    private String grade; // "С", "П", "О", "Н"
-    private Instant trialDate;
-    private String note;
+    private String target;
+    private TrialMode mode;
+    private TrialResult result;
 }

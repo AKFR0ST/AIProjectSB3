@@ -25,7 +25,7 @@ public class TrialService {
         findExerciseById(exerciseId);
         List<Trial> trials;
         if (from != null && to != null) {
-            trials = trialRepository.findByExerciseIdAndTrialDateBetweenOrderByCreatedAtDesc(exerciseId, from, to);
+            trials = trialRepository.findByExerciseIdAndCreatedAtBetweenOrderByCreatedAtDesc(exerciseId, from, to);
         } else {
             trials = trialRepository.findByExerciseIdOrderByCreatedAtDesc(exerciseId);
         }
@@ -37,9 +37,9 @@ public class TrialService {
 
         Trial trial = Trial.builder()
                 .exercise(exercise)
-                .grade(request.getGrade())
-                .trialDate(request.getTrialDate() != null ? request.getTrialDate() : Instant.now())
-                .note(request.getNote())
+                .target(request.getTarget())
+                .mode(request.getMode())
+                .result(request.getResult())
                 .build();
 
         return toResponse(trialRepository.save(trial));
@@ -64,9 +64,9 @@ public class TrialService {
         return TrialResponse.builder()
                 .id(trial.getId())
                 .exerciseId(trial.getExercise().getId())
-                .grade(trial.getGrade())
-                .trialDate(trial.getTrialDate())
-                .note(trial.getNote())
+                .target(trial.getTarget())
+                .mode(trial.getMode())
+                .result(trial.getResult())
                 .createdAt(trial.getCreatedAt())
                 .build();
     }

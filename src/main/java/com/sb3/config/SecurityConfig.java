@@ -58,8 +58,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/teachers").permitAll()
 
                         // AI_AGENT эндпоинты
-                        .requestMatchers("/api/llm/**").hasRole("AI_AGENT")
-                        .requestMatchers("/api/entities/**").hasRole("AI_AGENT")
+                        .requestMatchers("/api/llm/**").hasAnyRole("AI_AGENT", "ADMIN")
+                        .requestMatchers("/api/entities/**").hasAnyRole("AI_AGENT", "TEACHER", "ADMIN")
 
                         // ADMIN эндпоинты (управление преподавателями)
                         .requestMatchers(HttpMethod.POST, TEACHERS).hasRole("ADMIN")
