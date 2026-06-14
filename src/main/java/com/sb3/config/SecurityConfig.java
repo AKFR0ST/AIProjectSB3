@@ -55,6 +55,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/refresh").permitAll()
                         .requestMatchers(SWAGGER_UI).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/students/list").permitAll()
 
                         // AI_AGENT эндпоинты
                         .requestMatchers("/api/llm/**").hasAnyRole("AI_AGENT", "ADMIN")
