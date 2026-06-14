@@ -61,7 +61,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/llm/**").hasAnyRole("AI_AGENT", "ADMIN")
                         .requestMatchers("/api/entities/**").hasAnyRole("AI_AGENT", "TEACHER", "ADMIN")
 
-                        // ADMIN эндпоинты (управление преподавателями)
+                        // IDP и Trials — ДО студентов
+                        .requestMatchers(IDP).hasAnyRole("TEACHER", "ADMIN")
+
+                        // ADMIN эндпоинты
                         .requestMatchers(HttpMethod.POST, TEACHERS).hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, TEACHER_ID).hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, TEACHER_ID + "/status").hasRole("ADMIN")
@@ -69,11 +72,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, TEACHER_ID + "/password-updated").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, TEACHER_ID).hasRole("ADMIN")
 
-                        // Просмотр преподавателей доступен ADMIN и TEACHER
+                        // Просмотр преподавателей
                         .requestMatchers(HttpMethod.GET, TEACHERS).hasAnyRole("ADMIN", "TEACHER")
                         .requestMatchers(HttpMethod.GET, TEACHER_ID).hasAnyRole("ADMIN", "TEACHER")
 
-                        // Ученики (CRUD) — доступно TEACHER и ADMIN
+                        // Ученики
                         .requestMatchers(HttpMethod.GET, STUDENTS).hasAnyRole("TEACHER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, STUDENT_ID).hasAnyRole("TEACHER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, STUDENTS).hasAnyRole("TEACHER", "ADMIN")
@@ -81,20 +84,16 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, STUDENT_ID + "/**").hasAnyRole("TEACHER", "ADMIN")
                         .requestMatchers(HttpMethod.DELETE, STUDENT_ID).hasAnyRole("TEACHER", "ADMIN")
 
-                        // IDP и Trials
-                        .requestMatchers(IDP).hasAnyRole("TEACHER", "ADMIN")
-
                         // Задачи
                         .requestMatchers(HttpMethod.POST, TASKS).hasAnyRole("TEACHER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, TASKS).hasAnyRole("TEACHER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, TASK_ID).hasAnyRole("TEACHER", "ADMIN")
 
-                        // Аутентифицированные эндпоинты
+                        // Аутентифицированные
                         .requestMatchers("/api/auth/logout").authenticated()
                         .requestMatchers("/api/auth/change-password").authenticated()
                         .requestMatchers("/api/auth/me").authenticated()
 
-                        // Всё остальное
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
