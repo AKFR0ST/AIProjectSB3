@@ -34,6 +34,7 @@ public class SecurityConfig {
     private static final String STUDENT_ID = "/api/students/{id}";
     private static final String TASKS = "/api/tasks";
     private static final String TASK_ID = "/api/tasks/{id}";
+    private static final String IDP = "/api/idp/**";
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -55,7 +56,6 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/refresh").permitAll()
                         .requestMatchers(SWAGGER_UI).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/teachers").permitAll()
 
                         // AI_AGENT эндпоинты
                         .requestMatchers("/api/llm/**").hasAnyRole("AI_AGENT", "ADMIN")
@@ -80,6 +80,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, STUDENT_ID).hasAnyRole("TEACHER", "ADMIN")
                         .requestMatchers(HttpMethod.PATCH, STUDENT_ID + "/**").hasAnyRole("TEACHER", "ADMIN")
                         .requestMatchers(HttpMethod.DELETE, STUDENT_ID).hasAnyRole("TEACHER", "ADMIN")
+
+                        // IDP и Trials
+                        .requestMatchers(IDP).hasAnyRole("TEACHER", "ADMIN")
 
                         // Задачи
                         .requestMatchers(HttpMethod.POST, TASKS).hasAnyRole("TEACHER", "ADMIN")
