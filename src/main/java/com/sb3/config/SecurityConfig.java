@@ -83,6 +83,7 @@ public class SecurityConfig {
 
                         // IDP и Trials
                         .requestMatchers("/api/idp/**").hasAnyRole("TEACHER", "ADMIN")
+                        .requestMatchers("/api/idp/exercises/**").hasAnyRole("TEACHER", "ADMIN")
 
                         // Задачи
                         .requestMatchers(HttpMethod.POST, TASKS).hasAnyRole("TEACHER", "ADMIN")
