@@ -34,6 +34,5 @@ public class TeacherRequest {
     @NotNull(message = "Статус обязателен")
     private TeacherStatusRequest status;
 
-    @NotBlank(message = "Пароль обязателен")
     private String password;
 }

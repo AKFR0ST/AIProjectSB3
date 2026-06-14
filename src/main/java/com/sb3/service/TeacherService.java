@@ -5,6 +5,7 @@ import com.sb3.constant.UserRole;
 import com.sb3.dto.teacher.TeacherRequest;
 import com.sb3.dto.teacher.TeacherResponse;
 import com.sb3.entity.teacher.Teacher;
+import com.sb3.exception.DuplicateEmailException;
 import com.sb3.exception.NotFoundException;
 import com.sb3.mapper.TeacherMapper;
 import com.sb3.repository.TeacherRepository;
@@ -17,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.time.LocalDateTime;
 
 
 @Slf4j
@@ -44,6 +47,11 @@ public class TeacherService {
     public TeacherResponse createTeacher(TeacherRequest request) {
         log.info("Creating new teacher: {} {}", request.getLastName(), request.getFirstName());
 
+        // Проверяем уникальность email при создании
+        if (teacherRepository.existsByEmail(request.getEmail())) {
+            throw new DuplicateEmailException("Teacher with email " + request.getEmail() + " already exists");
+        }
+
         Teacher teacher = teacherMapper.toEntity(request);
         teacher.setPassword(passwordEncoder.encode(request.getPassword())); // временный пароль
         teacher = teacherRepository.save(teacher);
@@ -57,7 +65,35 @@ public class TeacherService {
         log.info("Updating teacher with id: {}", id);
 
         Teacher teacher = findTeacherById(id);
-        teacherMapper.updateEntity(teacher, request);
+
+        // Сохраняем старый email для сравнения
+        String oldEmail = teacher.getEmail();
+        String newEmail = request.getEmail();
+
+        // Проверяем, изменился ли email
+        if (!oldEmail.equals(newEmail)) {
+            // Если email изменился, проверяем, не занят ли он другим учителем
+            if (teacherRepository.existsByEmail(newEmail)) {
+                throw new DuplicateEmailException("Teacher with email " + newEmail + " already exists");
+            }
+            log.info("Updating email from {} to {}", oldEmail, newEmail);
+            teacher.setEmail(newEmail);
+        }
+
+        // Обновляем остальные поля (кроме email, если он не менялся)
+        teacher.setLastName(request.getLastName());
+        teacher.setFirstName(request.getFirstName());
+        teacher.setPatronymic(request.getPatronymic());
+        teacher.setPhone(request.getPhone());
+        teacher.setSpecialization(request.getSpecialization());
+        teacher.setStatus(TeacherStatus.valueOf(request.getStatus().name()));
+
+        // Обновляем пароль только если он предоставлен
+        if (request.getPassword() != null && !request.getPassword().isEmpty()) {
+            teacher.setPassword(passwordEncoder.encode(request.getPassword()));
+            teacher.setPasswordUpdatedAt(LocalDateTime.now());
+        }
+
         teacher = teacherRepository.save(teacher);
 
         return teacherMapper.toResponse(teacher);
