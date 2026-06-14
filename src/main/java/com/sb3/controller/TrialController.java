@@ -33,7 +33,7 @@ public class TrialController {
     @PostMapping
     public ResponseEntity<TrialResponse> createTrial(
             @PathVariable("exercise_id") Long exerciseId,
-            @RequestBody @Valid TrialRequest request) {
+            @RequestBody TrialRequest request) {
         return ResponseEntity.status(201).body(service.createTrial(exerciseId, request));
     }
 
