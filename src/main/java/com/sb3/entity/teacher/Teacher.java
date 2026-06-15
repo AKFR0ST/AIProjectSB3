@@ -76,7 +76,7 @@ public class Teacher implements UserDetails {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @ElementCollection(fetch = FetchType.LAZY)  // Явно указываем LAZY
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "teacher_educations", joinColumns = @JoinColumn(name = "teacher_id"))
     @Column(name = "education")
     @Builder.Default
