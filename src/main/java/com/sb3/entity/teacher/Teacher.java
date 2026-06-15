@@ -76,6 +76,12 @@ public class Teacher implements UserDetails {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @ElementCollection
+    @CollectionTable(name = "teacher_educations", joinColumns = @JoinColumn(name = "teacher_id"))
+    @Column(name = "education")
+    @Builder.Default
+    private List<String> educations = new ArrayList<>();  // Список образований
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));

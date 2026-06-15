@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -34,5 +36,9 @@ public class TeacherRequest {
     @NotNull(message = "Статус обязателен")
     private TeacherStatusRequest status;
 
+    private List<Long> studentIds;
+
     private String password;
+
+    private List<String> educations;  // Список образований
 }
