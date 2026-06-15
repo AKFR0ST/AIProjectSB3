@@ -28,6 +28,12 @@ public class SecurityConfig {
             "/swagger-ui.html"
     };
 
+    private static final String[] PUBLIC_ENDPOINTS = {
+            "/api/auth/login",
+            "/api/auth/refresh",
+            "/actuator/health"  // Добавляем actuator health
+    };
+
     private static final String TEACHERS = "/api/teachers";
     private static final String TEACHER_ID = "/api/teachers/{id}";
     private static final String STUDENTS = "/api/students";
@@ -52,8 +58,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // Публичные эндпоинты
-                        .requestMatchers("/api/auth/login").permitAll()
-                        .requestMatchers("/api/auth/refresh").permitAll()
+                        .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(SWAGGER_UI).permitAll()
 
                         // AI_AGENT эндпоинты
