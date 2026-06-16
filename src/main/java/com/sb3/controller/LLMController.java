@@ -3,7 +3,6 @@ package com.sb3.controller;
 import com.sb3.dto.llm.LlmRequest;
 import com.sb3.entity.llm.LLMServices;
 import com.sb3.interfaces.LLMInterface;
-import com.sb3.service.GigaChatAPIService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
