@@ -59,7 +59,7 @@ public class Teacher implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
-    private UserRole role = UserRole.TEACHER;  // ← добавляем поле роли
+    private UserRole role = UserRole.TEACHER;
 
     @Column(name = "password_updated_at")
     private LocalDateTime passwordUpdatedAt;

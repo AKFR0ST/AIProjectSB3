@@ -21,7 +21,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -32,8 +31,8 @@ public class TeacherService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
-    public Page<TeacherResponse> getAllTeachers(Pageable pageable) {
-        return teacherRepository.findAll(pageable)
+    public Page<TeacherResponse> getAllTeachersOnly(Pageable pageable) {
+        return teacherRepository.findAllByRole(UserRole.TEACHER, pageable)
                 .map(teacherMapper::toResponse);
     }
 

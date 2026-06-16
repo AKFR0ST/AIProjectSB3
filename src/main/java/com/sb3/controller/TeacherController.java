@@ -36,7 +36,7 @@ public class TeacherController {
     public ResponseEntity<ListResponse<TeacherResponse>> getAllTeachers(
             @PageableDefault(size = 20, sort = "lastName", direction = Sort.Direction.ASC) Pageable pageable) {
 
-        Page<TeacherResponse> page = teacherService.getAllTeachers(pageable);
+        Page<TeacherResponse> page = teacherService.getAllTeachersOnly(pageable);
 
         ListResponse<TeacherResponse> response = ListResponse.<TeacherResponse>builder()
                 .items(page.getContent())

@@ -116,11 +116,11 @@ class TeacherServiceTest {
         Pageable pageable = PageRequest.of(0, 20);
         Page<Teacher> teacherPage = new PageImpl<>(List.of(teacher), pageable, 1);
 
-        when(teacherRepository.findAll(pageable)).thenReturn(teacherPage);
+        when(teacherRepository.findAllByRole(UserRole.TEACHER, pageable)).thenReturn(teacherPage);
         when(teacherMapper.toResponse(any(Teacher.class))).thenReturn(response);
 
         // when
-        Page<TeacherResponse> result = teacherService.getAllTeachers(pageable);
+        Page<TeacherResponse> result = teacherService.getAllTeachersOnly(pageable);
 
         // then
         assertThat(result).isNotNull();
@@ -128,7 +128,7 @@ class TeacherServiceTest {
         assertThat(result.getContent().get(0).getId()).isEqualTo(1L);
         assertThat(result.getTotalElements()).isEqualTo(1);
 
-        verify(teacherRepository, times(1)).findAll(pageable);
+        verify(teacherRepository, times(1)).findAllByRole(UserRole.TEACHER, pageable);
     }
 
     @Test
