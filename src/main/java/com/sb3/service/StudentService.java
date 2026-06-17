@@ -3,7 +3,6 @@ package com.sb3.service;
 import com.sb3.dto.student.StudentRequest;
 import com.sb3.dto.student.StudentShortResponse;
 import com.sb3.dto.student.StudentsListResponse;
-import com.sb3.entity.student.PersonalInfo;
 import com.sb3.entity.student.Student;
 import com.sb3.dto.student.StudentResponse;
 import com.sb3.mapper.StudentMapper;
@@ -29,17 +28,11 @@ public class StudentService {
 
         // TODO тут тоже вернуть отлетевший mapstuct
         if (student.getPersonalInfo() != null) student.getPersonalInfo().setId(null);
-        if (student.getMedicalInfo() != null) student.getMedicalInfo().setId(null);
+        if (student.getGeneralInfo() != null) student.getGeneralInfo().setId(null);
         if (student.getAbaHistory() != null) student.getAbaHistory().setId(null);
         if (student.getCommunication() != null) student.getCommunication().setId(null);
         if (student.getSocialAndPlay() != null) student.getSocialAndPlay().setId(null);
         if (student.getLearningSkills() != null) student.getLearningSkills().setId(null);
-        if (student.getBehavior() != null) {
-            student.getBehavior().setId(null);
-            if (student.getBehavior().getDangerousBehavior() != null) {
-                student.getBehavior().getDangerousBehavior().setId(null);
-            }
-        }
         if (student.getMotivation() != null) {
             student.getMotivation().setId(null);
             if (student.getMotivation().getPreferred() != null)

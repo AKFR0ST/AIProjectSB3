@@ -2,11 +2,13 @@ package com.sb3.service;
 
 import com.sb3.constant.TeacherStatus;
 import com.sb3.constant.UserRole;
+import com.sb3.dto.student.StudentShortResponse;
 import com.sb3.dto.teacher.TeacherRequest;
 import com.sb3.dto.teacher.TeacherResponse;
 import com.sb3.entity.teacher.Teacher;
 import com.sb3.exception.DuplicateEmailException;
 import com.sb3.exception.NotFoundException;
+import com.sb3.mapper.StudentMapper;
 import com.sb3.mapper.TeacherMapper;
 import com.sb3.repository.TeacherRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,6 +33,7 @@ public class TeacherService {
 
     private final TeacherRepository teacherRepository;
     private final TeacherMapper teacherMapper;
+    private final StudentMapper studentMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
@@ -93,9 +99,33 @@ public class TeacherService {
             teacher.setPasswordUpdatedAt(LocalDateTime.now());
         }
 
+        // Образование
+        if (request.getEducations() != null) {
+            // Очищаем старые образования
+            teacher.getEducations().clear();
+            // Добавляем новые
+            teacher.getEducations().addAll(request.getEducations());
+            log.info("Updated educations: {}", teacher.getEducations());
+        }
+
         teacher = teacherRepository.save(teacher);
 
         return teacherMapper.toResponse(teacher);
+    }
+
+    @Transactional(readOnly = true)
+    public List<StudentShortResponse> getTeacherStudents(Long teacherId) {
+        log.info("Getting students for teacher with id: {}", teacherId);
+
+        Teacher teacher = findTeacherById(teacherId);
+
+        if (teacher.getStudents() == null || teacher.getStudents().isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return teacher.getStudents().stream()
+                .map(studentMapper::toShortResponse)
+                .collect(Collectors.toList());
     }
 
     @Transactional

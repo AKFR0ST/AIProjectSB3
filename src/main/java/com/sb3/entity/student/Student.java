@@ -31,14 +31,14 @@ public class Student {
     private PersonalInfo personalInfo;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "medical_info_id")
-    private MedicalInfo medicalInfo;
+    @JoinColumn(name = "general_info_id")
+    private GeneralInfo generalInfo;
 
     @Column(name = "video_links", columnDefinition = "text")
     private String videoLinks;
 
-    @Column(name = "main_concern", columnDefinition = "text")
-    private String mainConcern;
+    @Column(name = "parent_main_request", columnDefinition = "text")
+    private String parentMainRequest;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "aba_history_id")
@@ -56,11 +56,11 @@ public class Student {
     @Column(name = "achievements_1year", columnDefinition = "text")
     private String achievements1year;
 
-    @Column(name = "goals_3months", columnDefinition = "text")
-    private String goals3months;
+    @Column(name = "parent_request_3_months", columnDefinition = "text")
+    private String parentRequestThreeMonths;
 
-    @Column(name = "goals_1year", columnDefinition = "text")
-    private String goals1year;
+    @Column(name = "parent_request_1_year", columnDefinition = "text")
+    private String parentRequestOneYear;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "communication_id")
@@ -73,10 +73,6 @@ public class Student {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "learning_skills_id")
     private LearningSkills learningSkills;
-
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "behavior_id")
-    private Behavior behavior;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "assessment_id")

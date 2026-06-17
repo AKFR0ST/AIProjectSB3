@@ -17,14 +17,14 @@ public class SocialAndPlay {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "attention_to_toys")
-    private String attentionToToys;
+    @Column(name = "how_plays_with_toys")
+    private String howPlaysWithToys;
 
-    @Column(name = "independent_play_duration")
-    private String independentPlayDuration;
+    @Column(name = "plays_with_adult")
+    private String playsWithAdult;
 
-    @Column(name = "imitative_play")
-    private Boolean imitativePlay;
+    @Column(name = "repeats_game_actions_after_others")
+    private Boolean repeatsGameActionsAfterOthers;
 
     @Column(name = "free_time_activities")
     private String freeTimeActivities;
@@ -42,8 +42,8 @@ public class SocialAndPlay {
     @JoinColumn(name = "peer_interactions_id")
     private PeerInteractions peerInteractions;
 
-    @Column(name = "favorite_games")
-    private String favoriteGames;
+    @Column(name = "favorite_activities_and_toys")
+    private String favoriteActivitiesAndToys;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "group_behavior_id")

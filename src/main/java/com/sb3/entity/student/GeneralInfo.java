@@ -7,17 +7,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "school_info")
+@Table(name = "general_info")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SchoolInfo {
+public class GeneralInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String type;
-    @Column(name = "current_program")
-    private String currentProgram;
+    @Column(name = "diagnosis_and_health_status")
+    private String diagnosisAndHealthStatus;
+
+    @Column(name = "development_history_from_pregnancy_birth", columnDefinition = "text")
+    private String developmentHistoryFromPregnancyBirth;
 }

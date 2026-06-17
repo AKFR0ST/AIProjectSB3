@@ -20,21 +20,21 @@ public class LearningSkills {
     @Column(name = "can_work_at_table")
     private Boolean canWorkAtTable;
 
-    @Column(name = "attention_span_minutes")
-    private Integer attentionSpanMinutes;
+    @Column(name = "task_attention_span_minutes")
+    private Integer taskAttentionSpanMinutes;
 
     @Column(name = "acquisition_speed")
     private String acquisitionSpeed;
 
-    @Column(columnDefinition = "text")
-    private String retention;
+    @Column(name = "skills_retained", columnDefinition = "text")
+    private String skillsRetained;
 
-    @Column(name = "cooperates_with_adult")
-    private Boolean cooperatesWithAdult;
+    @Column(name = "works_jointly_with_adult")
+    private Boolean worksJointlyWithAdult;
 
-    @Column(name = "follows_instructions")
-    private Boolean followsInstructions;
+    @Column(name = "follows_adult_instructions")
+    private Boolean followsAdultInstructions;
 
-    @Column(name = "requests_break_or_change")
-    private Boolean requestsBreakOrChange;
+    @Column(name = "requests_break_help_or_change")
+    private Boolean requestsBreakHelpOrChange;
 }

@@ -11,7 +11,7 @@ public class StudentResponse {
     private Long studentId;
     private String studentCode;
     private PersonalInfo personalInfo;
-    private MedicalInfo medicalInfo;
+    private GeneralInfo generalInfo;
     private String videoLinks;
     private String mainConcern;
     private AbaHistory abaHistory;
@@ -24,7 +24,6 @@ public class StudentResponse {
     private Communication communication;
     private SocialAndPlay socialAndPlay;
     private LearningSkills learningSkills;
-    private Behavior behavior;
     private List<ProblemBehavior> problemBehaviors;
     private List<SelfStimulatoryBehavior> selfStimulatoryBehaviors;
     private Motivation motivation;

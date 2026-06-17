@@ -20,21 +20,13 @@ public class PeerInteractions {
     @Column(name = "parallel_play")
     private Boolean parallelPlay;
 
-    @Column(name = "physical_contact_initiation")
-    private Boolean physicalContactInitiation;
+    @Column(name = "initiates_peer_contact")
+    private Boolean initiatesPeerContact;
 
-    @Column(name = "spontaneous_requests_to_peers")
-    private Boolean spontaneousRequestsToPeers;
-
-    @Column(name = "responds_to_peer_requests")
-    private Boolean respondsToPeerRequests;
+    @Column(name = "supports_peer_dialogue")
+    private Boolean supportsPeerDialogue;
 
     @Column(name = "symbolic_play_with_peers_5min")
     private Boolean symbolicPlayWithPeers5min;
 
-    @Column(name = "social_imaginative_play_with_peers")
-    private Boolean socialImaginativePlayWithPeers;
-
-    @Column(name = "dialogue_multiple_phrases_5topics")
-    private Boolean dialogueMultiplePhrases5topics;
 }

@@ -17,14 +17,17 @@ public class AbaHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "has_prior_aba")
-    private Boolean hasPriorAba;
+    @Column(name = "has_aba_experience")
+    private Boolean hasAbaExperience;
 
     @Column(name = "aba_duration_intensity")
     private String abaDurationIntensity;
 
     @Column(name = "other_developmental_activities")
     private String otherDevelopmentalActivities;
+
+    @Column(name = "attends_school")
+    private Boolean attendsSchool;
 
     @Column(name = "attends_kindergarten")
     private Boolean attendsKindergarten;

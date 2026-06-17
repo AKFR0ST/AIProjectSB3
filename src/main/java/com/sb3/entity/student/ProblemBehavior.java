@@ -23,18 +23,10 @@ public class ProblemBehavior {
     private String frequency;
     private String duration;
 
-    @Column(name = "prevention_strategy")
-    private String preventionStrategy;
+    @Column(name = "how_to_avoid")
+    private String howToAvoid;
 
-    @Column(name = "intervention_strategy")
-    private String interventionStrategy;
+    @Column(name = "how_to_stop")
+    private String howToStop;
 
-    @Column(name = "situations_never_occurs")
-    private String situationsNeverOccurs;
-
-    @Column(name = "high_risk_situations")
-    private String highRiskSituations;
-
-    @Column(name = "trigger_description")
-    private String triggerDescription;
 }

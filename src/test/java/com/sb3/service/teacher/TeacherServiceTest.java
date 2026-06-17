@@ -125,7 +125,7 @@ class TeacherServiceTest {
         // then
         assertThat(result).isNotNull();
         assertThat(result.getContent()).hasSize(1);
-        assertThat(result.getContent().get(0).getId()).isEqualTo(1L);
+        assertThat(result.getContent().getFirst().getId()).isEqualTo(1L);
         assertThat(result.getTotalElements()).isEqualTo(1);
 
         verify(teacherRepository, times(1)).findAllByRole(UserRole.TEACHER, pageable);

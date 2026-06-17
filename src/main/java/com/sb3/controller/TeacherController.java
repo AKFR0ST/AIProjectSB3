@@ -2,6 +2,7 @@ package com.sb3.controller;
 
 import com.sb3.constant.TeacherStatus;
 import com.sb3.constant.UserRole;
+import com.sb3.dto.student.StudentShortResponse;
 import com.sb3.dto.teacher.TeacherRequest;
 import com.sb3.dto.teacher.TeacherResponse;
 import com.sb3.service.TeacherService;
@@ -21,6 +22,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+
+import java.util.List;
 
 
 @RestController
@@ -99,5 +102,13 @@ public class TeacherController {
     public ResponseEntity<Void> deleteTeacher(@PathVariable Long id) {
         teacherService.deleteTeacher(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Получить студентов преподавателя")
+    @GetMapping("/{id}/students")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    public ResponseEntity<List<StudentShortResponse>> getTeacherStudents(@PathVariable Long id) {
+        List<StudentShortResponse> students = teacherService.getTeacherStudents(id);
+        return ResponseEntity.ok(students);
     }
 }

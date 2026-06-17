@@ -21,7 +21,7 @@ public interface StudentMapper {
     void updateEntity(@MappingTarget Student student, StudentRequest request);
 
     @Mapping(source = "personalInfo.birthDate", target = "birthDate")
-    @Mapping(source = "medicalInfo.psychiatricDiagnosis", target = "diagnosis")
+    @Mapping(source = "generalInfo.diagnosisAndHealthStatus", target = "diagnosis")
     @Mapping(source = "schoolInfo.type", target = "schoolType")
     @Mapping(source = "personalInfo.relatives", target = "relativeName", qualifiedByName = "firstRelativeName")
     @Mapping(source = "personalInfo.relatives", target = "relativePhone", qualifiedByName = "firstRelativePhone")

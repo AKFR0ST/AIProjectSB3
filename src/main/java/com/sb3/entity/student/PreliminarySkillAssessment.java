@@ -26,23 +26,17 @@ public class PreliminarySkillAssessment {
     @Column(name = "motor_imitation", columnDefinition = "text")
     private String motorImitation;
 
-    @Column(name = "vocal_verbal_behavior", columnDefinition = "text")
-    private String vocalVerbalBehavior;
+    @Column(name = "speech_skills", columnDefinition = "text")
+    private String speechSkills;
 
     @Column(name = "vocal_imitation", columnDefinition = "text")
     private String vocalImitation;
 
-    @Column(columnDefinition = "text")
-    private String matching;
+    @Column(name = "visual_perception", columnDefinition = "text")
+    private String visualPerception;
 
     @Column(name = "following_instructions", columnDefinition = "text")
     private String followingInstructions;
-
-    @Column(columnDefinition = "text")
-    private String labeling;
-
-    @Column(name = "feature_function_class", columnDefinition = "text")
-    private String featureFunctionClass;
 
     @Column(name = "conversation_skills", columnDefinition = "text")
     private String conversationSkills;
