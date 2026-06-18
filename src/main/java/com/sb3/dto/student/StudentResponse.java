@@ -13,14 +13,14 @@ public class StudentResponse {
     private PersonalInfo personalInfo;
     private GeneralInfo generalInfo;
     private String videoLinks;
-    private String mainConcern;
+    private String parentMainRequest;
     private AbaHistory abaHistory;
     private String strengths;
     private String challenges;
     private String achievements3months;
     private String achievements1year;
-    private String goals3months;
-    private String goals1year;
+    private String parentRequestThreeMonths;
+    private String parentRequestOneYear;
     private Communication communication;
     private SocialAndPlay socialAndPlay;
     private LearningSkills learningSkills;
