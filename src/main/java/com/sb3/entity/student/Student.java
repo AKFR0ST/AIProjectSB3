@@ -56,10 +56,10 @@ public class Student {
     @Column(name = "achievements_1year", columnDefinition = "text")
     private String achievements1year;
 
-    @Column(name = "parent_request_3_months", columnDefinition = "text")
+    @Column(name = "parent_request_three_months", columnDefinition = "text")
     private String parentRequestThreeMonths;
 
-    @Column(name = "parent_request_1_year", columnDefinition = "text")
+    @Column(name = "parent_request_one_year", columnDefinition = "text")
     private String parentRequestOneYear;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
