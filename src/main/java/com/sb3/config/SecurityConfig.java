@@ -78,13 +78,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, TEACHER_ID).hasAnyRole("ADMIN", "TEACHER")
 
                         // Ученики
-                        .requestMatchers(HttpMethod.GET, STUDENTS + "/list").hasAnyRole("TEACHER", "ADMIN")
-                        .requestMatchers(HttpMethod.GET, STUDENTS).hasAnyRole("TEACHER", "ADMIN")
-                        .requestMatchers(HttpMethod.GET, STUDENT_ID).hasAnyRole("TEACHER", "ADMIN")
-                        .requestMatchers(HttpMethod.POST, STUDENTS).hasAnyRole("TEACHER", "ADMIN")
-                        .requestMatchers(HttpMethod.PUT, STUDENT_ID).hasAnyRole("TEACHER", "ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, STUDENT_ID + "/**").hasAnyRole("TEACHER", "ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, STUDENT_ID).hasAnyRole("TEACHER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, STUDENTS + "/list").hasAnyRole("TEACHER", "ADMIN", "AI_AGENT")
+                        .requestMatchers(HttpMethod.GET, STUDENTS).hasAnyRole("TEACHER", "ADMIN", "AI_AGENT")
+                        .requestMatchers(HttpMethod.GET, STUDENT_ID).hasAnyRole("TEACHER", "ADMIN", "AI_AGENT")
+                        .requestMatchers(HttpMethod.POST, STUDENTS).hasAnyRole("TEACHER", "ADMIN", "AI_AGENT")
+                        .requestMatchers(HttpMethod.PUT, STUDENT_ID).hasAnyRole("TEACHER", "ADMIN", "AI_AGENT")
+                        .requestMatchers(HttpMethod.PATCH, STUDENT_ID + "/**").hasAnyRole("TEACHER", "ADMIN", "AI_AGENT")
+                        .requestMatchers(HttpMethod.DELETE, STUDENT_ID).hasAnyRole("TEACHER", "ADMIN", "AI_AGENT")
 
                         // IDP и Trials
                         .requestMatchers("/api/idp/**").hasAnyRole("TEACHER", "ADMIN")
